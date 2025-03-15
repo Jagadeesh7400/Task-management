@@ -62,14 +62,14 @@ export default function Profile() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-white dark:bg-03045e bg-opacity-80 backdrop-blur-md rounded-lg shadow border border-ade8f4 dark:border-023e8a overflow-hidden">
-        <div className="h-32 bg-gradient-to-r from-0077b6 to-00b4d8"></div>
+    <div className="profile-container max-w-4xl mx-auto">
+      <div className="profile-card bg-white dark:bg-03045e bg-opacity-80 backdrop-blur-md rounded-lg shadow border border-ade8f4 dark:border-023e8a overflow-hidden">
+        <div className="profile-header h-32 bg-gradient-to-r from-0077b6 to-00b4d8"></div>
 
-        <div className="px-4 sm:px-6 lg:px-8 pb-6">
-          <div className="flex flex-col sm:flex-row items-center sm:items-end -mt-16 sm:-mt-20 mb-6 sm:space-x-5">
-            <div className="relative">
-              <div className="w-32 h-32 rounded-full border-4 border-white dark:border-03045e bg-ade8f4 dark:bg-023e8a flex items-center justify-center text-0077b6 dark:text-48cae4 text-4xl font-bold overflow-hidden">
+        <div className="profile-content px-4 sm:px-6 lg:px-8 pb-6">
+          <div className="profile-info flex flex-col sm:flex-row items-center sm:items-end -mt-16 sm:-mt-20 mb-6 sm:space-x-5">
+            <div className="profile-photo relative">
+              <div className="profile-photo-container w-32 h-32 rounded-full border-4 border-white dark:border-03045e bg-ade8f4 dark:bg-023e8a flex items-center justify-center text-0077b6 dark:text-48cae4 text-4xl font-bold overflow-hidden">
                 {user?.profilePhoto ? (
                   <img
                     src={user.profilePhoto || "/placeholder.svg"}
@@ -86,7 +86,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="mt-4 sm:mt-0 text-center sm:text-left">
+            <div className="profile-name mt-4 sm:mt-0 text-center sm:text-left">
               <h1 className="text-2xl font-bold text-0077b6 dark:text-48cae4">{user?.name || "User Profile"}</h1>
               <p className="text-gray-600 dark:text-gray-300">
                 {user?.occupation || "No occupation set"}
@@ -94,7 +94,7 @@ export default function Profile() {
               </p>
             </div>
 
-            <div className="mt-4 sm:mt-0 sm:ml-auto">
+            <div className="profile-edit-button mt-4 sm:mt-0 sm:ml-auto">
               <button
                 onClick={() => setIsEditing(!isEditing)}
                 className="px-4 py-2 bg-0077b6 text-white rounded-md hover:bg-023e8a"
@@ -107,7 +107,7 @@ export default function Profile() {
           {error && <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">{error}</div>}
 
           {success && (
-            <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">{success}</div>
+            <div className="success-message mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">{success}</div>
           )}
 
           {isEditing ? (
@@ -282,7 +282,7 @@ export default function Profile() {
               </div>
             </form>
           ) : (
-            <div className="space-y-6">
+            <div className="profile-details space-y-6">
               <div>
                 <h3 className="text-lg font-medium text-0077b6 dark:text-48cae4 mb-2">About</h3>
                 <p className="text-gray-600 dark:text-gray-300">{user?.bio || "No bio available"}</p>
@@ -352,4 +352,3 @@ export default function Profile() {
     </div>
   )
 }
-

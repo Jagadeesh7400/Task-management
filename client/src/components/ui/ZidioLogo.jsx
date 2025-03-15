@@ -5,15 +5,14 @@
  * @returns {JSX.Element} The ZidioLogo SVG component
  */
 
+import logo from "../../assets/logo.png";
+
 export default function ZidioLogo({ className = "h-6 w-6" }) {
   return (
-      <img
-        src="./assets/vite.svg"
-        className={className}
-        width="200"
-        height="200"
-        alt="Zidio Logo"
-      />
-
+    <img
+      src={logo}
+      className={`${className} object-contain`}
+      alt="Zidio Logo"
+    />
   );
 }

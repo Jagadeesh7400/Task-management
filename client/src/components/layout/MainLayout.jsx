@@ -24,9 +24,9 @@ export default function MainLayout() {
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-primary-color to-secondary-color dark:from-dark-color dark:to-primary-color animate-fade-in">
+    <div className="auth-wrapper">
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} isMobile={isMobile} />
-      <div className="flex flex-col flex-1 overflow-hidden">
+      <div className="auth-box">
         <Navbar onMenuButtonClick={() => setSidebarOpen(true)} />
         <main className="flex-1 overflow-y-auto p-4 md:p-6 animate-slide-up">
           <div className="max-w-7xl mx-auto">
@@ -37,4 +37,3 @@ export default function MainLayout() {
     </div>
   )
 }
-

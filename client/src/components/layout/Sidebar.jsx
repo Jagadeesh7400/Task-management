@@ -30,22 +30,22 @@ export default function Sidebar({ isOpen, setIsOpen, isMobile }) {
     <>
       {/* Overlay for mobile */}
       {isMobile && isOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 animate-fade-in" 
-          onClick={() => setIsOpen(false)} 
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 animate-fade-in"
+          onClick={() => setIsOpen(false)}
         />
       )}
 
       <aside
-        className={`
-          fixed top-0 left-0 z-30 h-full w-64 
-          transform transition-transform duration-300 ease-in-out
-          ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-          glass dark:bg-dark-color
-          border-r border-white border-opacity-20
-          flex flex-col
-          animate-slide-left
-        `}
+        className={`sidebar 
+    fixed top-0 left-0 z-30 h-full w-64 
+    transform transition-transform duration-300 ease-in-out
+    ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+    glass dark:bg-dark-color
+    border-r border-white border-opacity-20
+    flex flex-col
+    animate-slide-left
+  `}
       >
         <div className="flex items-center justify-between p-4 border-b border-white border-opacity-20">
           <Link to="/" className="flex items-center space-x-2">
@@ -53,8 +53,8 @@ export default function Sidebar({ isOpen, setIsOpen, isMobile }) {
             <span className="text-xl font-bold text-primary-color dark:text-secondary-color">Zidio</span>
           </Link>
           {isMobile && (
-            <button 
-              onClick={() => setIsOpen(false)} 
+            <button
+              onClick={() => setIsOpen(false)}
               className="md:hidden hover:bg-white hover:bg-opacity-10 p-1 rounded-full transition-colors"
             >
               <X size={24} className="text-primary-color dark:text-secondary-color" />

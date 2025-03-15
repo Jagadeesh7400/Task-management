@@ -49,10 +49,14 @@ export default function EditTaskModal({ isOpen, onClose, task, onTaskUpdated }) 
 
     try {
       await updateTask(task.id, {
+        status: "pending", // Set default status for new tasks if not provided
+
         title,
         description,
         deadline: deadline.toISOString(),
         priority,
+        status: task.status || "pending", // Use existing status or set default
+
       })
 
       onTaskUpdated()
@@ -215,4 +219,3 @@ export default function EditTaskModal({ isOpen, onClose, task, onTaskUpdated }) 
     </div>
   )
 }
-

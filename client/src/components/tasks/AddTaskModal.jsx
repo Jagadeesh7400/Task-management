@@ -39,6 +39,7 @@ export default function AddTaskModal({ isOpen, onClose, onTaskAdded }) {
         description,
         deadline: deadline.toISOString(),
         priority, // Include priority in task creation
+        // status: "pending", // Removed duplicate status key
       })
 
       onTaskAdded()

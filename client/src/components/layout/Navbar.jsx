@@ -39,8 +39,8 @@ export default function Navbar({ onMenuButtonClick }) {
   }
 
   return (
-    <header className="glass dark:bg-dark-color dark:bg-opacity-80 border-b border-white border-opacity-20 animate-slide-down">
-      <div className="flex items-center justify-between h-16 px-4 md:px-6">
+    <header className="navbar glass dark:bg-dark-color dark:bg-opacity-80 border-b border-white border-opacity-20 animate-slide-down">
+      <div className="navbar-content flex items-center justify-between h-16 px-4 md:px-6">
         <div className="flex items-center">
           <button 
             onClick={onMenuButtonClick} 
@@ -51,7 +51,7 @@ export default function Navbar({ onMenuButtonClick }) {
           </button>
 
           {!showSearch && (
-            <h1 className="ml-2 text-xl font-semibold text-primary-color dark:text-secondary-color hidden md:block">
+            <h1 className="navbar-title ml-2 text-xl font-semibold text-primary-color dark:text-secondary-color hidden md:block">
               Zidio Task Management
             </h1>
           )}
@@ -86,7 +86,7 @@ export default function Navbar({ onMenuButtonClick }) {
             </button>
           )}
 
-          <div className="relative" ref={notificationRef}>
+          <div className="notification-container relative" ref={notificationRef}>
             <button
               onClick={() => setShowNotifications(!showNotifications)}
               className="relative p-2 rounded-md text-primary-color dark:text-secondary-color 
@@ -99,7 +99,7 @@ export default function Navbar({ onMenuButtonClick }) {
             {showNotifications && <NotificationPanel />}
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="user-info flex items-center space-x-2">
             <div className="w-8 h-8 rounded-full bg-primary-color flex items-center justify-center text-white
               hover:bg-secondary-color transition-colors cursor-pointer">
               {user?.name?.charAt(0) || "U"}

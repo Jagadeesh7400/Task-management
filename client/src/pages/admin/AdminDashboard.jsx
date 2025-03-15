@@ -38,7 +38,7 @@ export default function AdminDashboard() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
+      <div className="loading-container flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-0077b6 dark:border-48cae4"></div>
       </div>
     )
@@ -46,13 +46,13 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+      <div className="dashboard-header flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-0077b6 dark:text-48cae4">Admin Dashboard</h1>
+          <h1 className="dashboard-title text-2xl font-bold text-0077b6 dark:text-48cae4">Admin Dashboard</h1>
           <p className="text-gray-600 dark:text-gray-300">Welcome back, {user?.name || "Admin"}</p>
         </div>
 
-        <div className="mt-4 md:mt-0 flex flex-wrap gap-2">
+        <div className="action-buttons mt-4 md:mt-0 flex flex-wrap gap-2">
           <Link
             to="/admin/users/new"
             className="flex items-center px-4 py-2 bg-0077b6 text-white rounded-lg hover:bg-023e8a transition-colors"
@@ -73,7 +73,7 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white dark:bg-03045e bg-opacity-80 backdrop-blur-md rounded-lg shadow p-4 border border-ade8f4 dark:border-023e8a">
+        <div className="stat-card bg-white dark:bg-03045e bg-opacity-80 backdrop-blur-md rounded-lg shadow p-4 border border-ade8f4 dark:border-023e8a">
           <div className="flex items-center">
             <div className="p-3 rounded-full bg-blue-100 dark:bg-023e8a text-0077b6 dark:text-48cae4 mr-4">
               <Users className="h-6 w-6" />
@@ -124,7 +124,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="recent-activity grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white dark:bg-03045e bg-opacity-80 backdrop-blur-md rounded-lg shadow border border-ade8f4 dark:border-023e8a p-4 md:p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-0077b6 dark:text-48cae4">Recent Users</h2>

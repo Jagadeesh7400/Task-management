@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { CheckCircle } from "lucide-react" // Import CheckCircle for completion icon
 import { Calendar, Clock, Edit, Trash, AlertTriangle, Flag } from "lucide-react"
 
 export default function TaskCard({ task, onTaskComplete, className, style }) {
@@ -93,6 +94,21 @@ export default function TaskCard({ task, onTaskComplete, className, style }) {
   }
 
   return (
+    <div className={`task-card ${className}`}>
+      <h3>{task.title}</h3>
+      <p>{task.description}</p>
+      <p>Status: {task.status}</p> {/* Display current status */}
+      <button onClick={handleComplete} className="complete-button">
+        <CheckCircle /> {/* Icon for completion */}
+        Mark as Complete
+      </button>
+      <h3>{task.title}</h3>
+      <p>{task.description}</p>
+      <p>Status: {task.status}</p> {/* Display current status */}
+      <button onClick={handleComplete} className="complete-button">
+        <CheckCircle /> {/* Icon for completion */}
+        Mark as Complete
+      </button>
     <div
       className={`
       glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg overflow-hidden
@@ -126,7 +142,8 @@ export default function TaskCard({ task, onTaskComplete, className, style }) {
             <button className="text-dark-color dark:text-light-color opacity-60 hover:opacity-100 hover:text-danger-color transition-colors">
               <Trash size={16} />
             </button>
-          </div>
+          </div> {/* Closing div for task-card */}
+    </div> {/* Closing div for the main container */}
         </div>
 
         <p
@@ -194,4 +211,3 @@ export default function TaskCard({ task, onTaskComplete, className, style }) {
     </div>
   )
 }
-
