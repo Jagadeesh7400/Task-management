@@ -1,0 +1,28 @@
+const express = require("express")
+const router = express.Router()
+const taskController = require("../controllers/taskController")
+const { authenticateToken } = require("../middleware/authMiddleware")
+
+// Apply authentication middleware to all routes
+router.use(authenticateToken)
+
+// Get all tasks for the current user
+router.get("/", taskController.getTasks)
+
+// Get task statistics
+router.get("/stats", taskController.getTaskStats)
+
+// Get a single task
+router.get("/:id", taskController.getTask)
+
+// Create a new task
+router.post("/", taskController.createTask)
+
+// Update a task
+router.put("/:id", taskController.updateTask)
+
+// Delete a task
+router.delete("/:id", taskController.deleteTask)
+
+module.exports = router
+
