@@ -6,7 +6,8 @@ export default function LoadingScreen() {
       <div className="loading-content flex flex-col items-center">
         <ZidioLogo className="h-16 w-16 animate-pulse" />
         <h1 className="loading-title mt-4 text-2xl font-bold text-0077b6 dark:text-48cae4">Zidio Task Management</h1>
-        <div className="loading-indicators mt-4 flex space-x-2">
+          <div className="loading-indicators mt-4 flex space-x-2">
+
           {[0, 1, 2].map((i) => (
             <div
               key={i}

@@ -7,22 +7,29 @@ import ZidioLogo from "../components/ui/ZidioLogo"
 export default function Unauthorized() {
   return (
     <div className="unauthorized-container min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-color to-secondary-color dark:from-dark-color dark:to-primary-color p-4 animate-fade-in">
+
       <div className="unauthorized-card w-full max-w-md animate-slide-up">
+
         <div className="unauthorized-glass glass dark:bg-dark-color dark:bg-opacity-80 rounded-lg shadow-xl overflow-hidden">
+
           <div className="unauthorized-content p-6 sm:p-8">
             <div className="unauthorized-logo flex justify-center mb-8">
+
               <ZidioLogo className="h-12 w-12" />
             </div>
 
             <div className="unauthorized-message text-center">
               <ShieldAlert className="h-16 w-16 text-danger-color mx-auto mb-4" />
               <h2 className="unauthorized-title text-2xl font-bold text-danger-color mb-4">Access Denied</h2>
+
               <p className="unauthorized-description text-dark-color dark:text-light-color mb-6">
+
                 You don't have permission to access this page. This area requires administrator privileges.
               </p>
               <Link
                 to="/"
                 className="unauthorized-link inline-flex items-center text-primary-color dark:text-secondary-color hover:underline"
+
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to Dashboard

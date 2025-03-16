@@ -11,7 +11,7 @@ export default function ZidioLogo({ className = "h-6 w-6" }) {
   return (
     <img
       src={logo}
-      className={`${className} object-contain`}
+      className={`${className} object-contain h-6 w-6`}
       alt="Zidio Logo"
     />
   );

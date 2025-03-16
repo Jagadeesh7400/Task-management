@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { Outlet } from "react-router-dom"
-import Sidebar from "./Sidebar"
-import Navbar from "./Navbar"
+import Sidebar from "../layout/Sidebar"
+
+import Navbar from "../layout/Navbar"
 import { useAuth } from "../../hooks/useAuth"
 import LoadingScreen from "../ui/LoadingScreen"
 
@@ -26,10 +27,12 @@ export default function MainLayout() {
   }
 
   return (
-    <div className="auth-wrapper">
+    <div className="auth-container">
+
 
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} isMobile={isMobile} />
-      <div className="auth-box">
+      <div className="auth-card">
+
 
         <Navbar onMenuButtonClick={() => setSidebarOpen(true)} />
         <main className="flex-1 overflow-y-auto p-4 md:p-6">

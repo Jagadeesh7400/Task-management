@@ -2,6 +2,8 @@ const express = require("express")
 const router = express.Router()
 const authController = require("../controllers/authController")
 
+router.post("/validate-token", authController.validateToken) // Add route for token validation
+
 // Register a new user
 router.post("/register", authController.register)
 
@@ -15,4 +17,3 @@ router.post("/forgot-password", authController.forgotPassword)
 router.post("/reset-password", authController.resetPassword)
 
 module.exports = router
-

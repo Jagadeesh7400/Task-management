@@ -97,7 +97,6 @@ export default function Register() {
                 placeholder="••••••••"
               />
               <button
-            
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="auth-icon-btn"
@@ -163,7 +162,6 @@ export default function Register() {
                 Register
               </span>
             )}
-          
           </button>
         </form>
 

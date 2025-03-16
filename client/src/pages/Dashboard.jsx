@@ -114,212 +114,195 @@ export default function Dashboard() {
   }
 
   return (
-    // ...
-
-<div className="dashboard-container animate-fade-in">
-  <div className="dashboard-container">
-    <div className="dashboard-header-container">
-      <div>
-        <h1 className="dashboard-title-text">
-          Welcome back, {user?.name || "User "}
-        </h1>
-        <p className="text-dark-color dark:text-light-color opacity-80">Here's an overview of your tasks</p>
-      </div>
-
-      <div className="dashboard-action-buttons">
-        <button
-          onClick={() => setShowAddTaskModal(true)}
-          className="flex items-center px-4 py-2 bg-primary-color text-white rounded-lg 
-          hover:bg-secondary-color transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group"
-        >
-          <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform" />
-          Add Task
-        </button>
-
-        <button
-          onClick={() => exportToCSV(filteredAndSortedTasks)}
-          className="flex items-center px-4 py-2 glass border border-white border-opacity-20 rounded-lg
-          text-dark-color dark:text-light-color hover:bg-white hover:bg-opacity-10 transition-all group"
-          disabled={filteredAndSortedTasks.length === 0}
-        >
-          <Download className="mr-2 h-4 w-4 group-hover:translate-y-1 transition-transform" />
-          Export
-        </button>
-      </div>
-    </div>
-
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <div
-        className="dashboard-widget"
-        onClick={() => setFilter("all")}
-      >
-        <div className="widget-header">
-          <div className="p-3 rounded-full bg-primary-color bg-opacity-10 text-primary-color dark:text-secondary-color mr-4">
-            <Calendar className="h-6 w-6" />
-          </div>
-          <div>
-            <p className="text-sm text-dark-color dark:text-light-color opacity-80">Total Tasks</p>
-            <p className="text-xl font-semibold text-primary-color dark:text-secondary-color">{stats.total}</p>
-          </div>
+    <div className="dashboard-container animate-fade-in">
+      <div className="dashboard-header">
+        <div>
+          <h1 className="dashboard-title">
+            Welcome back, {user?.name || "User "}
+          </h1>
+          <p className="text-muted">Here's an overview of your tasks</p>
         </div>
-      </div>
 
-      <div
-        className="dashboard-widget"
-        onClick={() => setFilter("completed")}
-      >
-        <div className="widget-header">
-          <div className="p-3 rounded-full bg-success-color bg-opacity-10 text-success-color mr-4">
-            <CheckCircle className="h-6 w-6" />
-          </div>
-          <div>
-            <p className="text-sm text-dark-color dark:text-light-color opacity-80">Completed</p>
-            <p className="text-xl font-semibold text-success-color">{stats.completed}</p>
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="dashboard-widget"
-        onClick={() => setFilter("pending")}
-      >
-        <div className="widget-header">
-          <div className="p-3 rounded-full bg-warning-color bg-opacity-10 text-warning-color mr-4">
-            <Clock className="h-6 w-6" />
-          </div>
-          <div>
-            <p className="text-sm text-dark-color dark:text-light-color opacity-80">Pending</p>
-            <p className="text-xl font-semibold text-warning-color">{stats.pending}</p>
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="dashboard-widget"
-        onClick={() => setFilter("overdue")}
-      >
-        <div className="widget-header">
-          <div className="p-3 rounded-full bg-danger-color bg-opacity-10 text-danger-color mr-4">
-            <XCircle className="h-6 w-6" />
-          </div>
-          <div>
-            <p className="text-sm text-dark-color dark:text-light-color opacity-80">Overdue</p>
-            <p className="text-xl font-semibold text-danger-color">{stats.overdue}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div className="dashboard-widget">
-      <div className="widget-header">
-        <h2 className="text-xl font-semibold text-primary-color dark:text-secondary-color">
-          {filter === "all"
-            ? "All Tasks"
-            : filter === "pending"
-              ? "Pending Tasks"
-              : filter === "completed"
-                ? "Completed Tasks"
-                : "Overdue Tasks"}
-        </h2>
-
-        <div className="flex flex-wrap gap-2">
-          <form onSubmit={handleSearch} className="relative w-full md:w-64">
-            <input
-              type="text"
-              placeholder="Search tasks..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px ```jsx
-              3 py-2 pl-10 glass dark:bg-dark-color dark:bg-opacity-50
-                border border-white border-opacity-20 rounded-md 
-                focus:outline-none focus:ring-2 focus:ring-primary-color dark:focus:ring-secondary-color
-                text-dark-color dark:text-light-color transition-all"
-            />
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-dark-color dark:text-light-color opacity-60" />
-            <button type="submit" className="hidden">
-              Search
-            </button>
-          </form>
-
-          <div className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg p-2 flex items-center gap-2">
-            <Filter className="h-4 w-4 text-dark-color dark:text-light-color opacity-60" />
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="text-sm glass dark:bg-dark-color dark:bg-opacity-50 border border-white border-opacity-20 rounded px-2 py-1 text-dark-color dark:text-light-color"
-            >
-              <option value="deadline">Deadline</option>
-              <option value="priority">Priority</option>
-              <option value="title">Title</option>
-            </select>
-
-            <button
-              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-              className="text-sm glass dark:bg-dark-color dark:bg-opacity-50 border border-white border-opacity-20 rounded px-2 py-1 text-dark-color dark:text-light-color"
-            >
-              {sortOrder === "asc" ? "↑" : "↓"}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {isLoading ? (
-        <div className="flex justify-center items-center h-40">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-color dark:border-secondary-color"></div>
-        </div>
-      ) : filteredAndSortedTasks.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredAndSortedTasks.map((task, index) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              onTaskComplete={setTaskToComplete}
-              className="animate-slide-up"
-              style={{ animationDelay: `${0.1 * (index + 1)}s` }}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-8">
-          <p className="text-dark-color dark:text-light-color opacity-80">
-            {searchQuery
-              ? "No tasks found matching your search."
-              : filter !== "all"
-                ? `No ${filter} tasks found.`
-                : "No tasks found. Create your first task!"}
-          </p>
+        <div className="dashboard-actions">
           <button
             onClick={() => setShowAddTaskModal(true)}
-            className="mt-4 inline-flex items-center px-4 py-2 bg-primary-color text-white rounded-lg 
+            className="flex items-center px-4 py-2 bg-primary-color text-white rounded-lg 
             hover:bg-secondary-color transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group"
           >
             <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform" />
             Add Task
           </button>
+
+          <button
+            onClick={() => exportToCSV(filteredAndSortedTasks)}
+            className="flex items-center px-4 py-2 glass border border-white border-opacity-20 rounded-lg
+            text-dark-color dark:text-light-color hover:bg-white hover:bg-opacity-10 transition-all group"
+            disabled={filteredAndSortedTasks.length === 0}
+          >
+            <Download className="mr-2 h-4 w-4 group-hover:translate-y-1 transition-transform" />
+            Export
+          </button>
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="dashboard-widget" onClick={() => setFilter("all")}>
+          <div className="widget-header">
+            <div className="p-3 rounded-full bg-primary-color bg-opacity-10 text-primary-color dark:text-secondary-color mr-4">
+              <Calendar className="h-6 w-6" />
+            </div>
+            <div>
+              <p className="text-sm text-muted">Total Tasks</p>
+              <p className="text-xl font-semibold text-dark">{stats.total}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="dashboard-widget" onClick={() => setFilter("completed")}>
+          <div className="widget-header">
+            <div className="p-3 rounded-full bg-success-color bg-opacity-10 text-success-color mr-4">
+              <CheckCircle className="h-6 w-6" />
+            </div>
+            <div>
+              <p className="text-sm text-muted">Completed</p>
+              <p className="text-xl font-semibold text-dark">{stats.completed}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="dashboard-widget" onClick={() => setFilter("pending")}>
+          <div className="widget-header">
+            <div className="p-3 rounded-full bg-warning-color bg-opacity-10 text-warning-color mr-4">
+              <Clock className="h-6 w-6" />
+            </div>
+            <div>
+              <p className="text-sm text-muted">Pending</p>
+              <p className="text-xl font-semibold text-dark">{stats.pending}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="dashboard-widget" onClick={() => setFilter("overdue")}>
+          <div className="widget-header">
+            <div className="p-3 rounded-full bg-danger-color bg-opacity-10 text-danger-color mr-4">
+              <XCircle className="h-6 w-6" />
+            </div>
+            <div>
+              <p className="text-sm text-muted">Overdue</p>
+              <p className="text-xl font-semibold text-dark">{stats.overdue}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="dashboard-card">
+        <div className="card-header">
+          <h2 className="text-xl font-semibold text-dark">
+            {filter === "all"
+              ? "All Tasks"
+              : filter === "pending"
+                ? "Pending Tasks"
+                : filter === "completed"
+                  ? "Completed Tasks"
+                  : "Overdue Tasks"}
+          </h2>
+
+          <div className="flex flex-wrap gap-2">
+            <form onSubmit={handleSearch} className="relative w-full md:w-64">
+              <input
+                type="text"
+                placeholder="Search tasks..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-3 py-2 pl-10 glass dark:bg-dark-color dark:bg-opacity-50
+                  border border-white border-opacity-20 rounded-md 
+                  focus:outline-none focus:ring-2 focus:ring-primary-color dark:focus:ring-secondary-color
+                  text-dark-color dark:text-light-color transition-all"
+              />
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-dark-color dark:text-light-color opacity-60" />
+              <button type="submit" className="hidden">
+                Search
+              </button>
+            </form>
+
+            <div className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg p-2 flex items-center gap-2">
+              <Filter className="h-4 w-4 text-dark-color dark:text-light-color opacity-60" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="text-sm glass dark:bg-dark-color dark:bg-opacity-50 border border-white border-opacity-20 rounded px-2 py-1 text-dark-color dark:text-light-color"
+              >
+                <option value="deadline">Deadline</option>
+                <option value="priority">Priority</option>
+                <option value="title">Title</option>
+              </select>
+
+              <button
+                onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+                className="text-sm glass dark:bg-dark-color dark:bg-opacity-50 border border-white border-opacity-20 rounded px-2 py-1 text-dark-color dark:text-light-color"
+              >
+                {sortOrder === "asc" ? "↑" : "↓"}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {isLoading ? (
+          <div className="flex justify-center items-center h-40">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-color dark:border-secondary-color"></div>
+          </div>
+        ) : filteredAndSortedTasks.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredAndSortedTasks.map((task, index) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                onTaskComplete={setTaskToComplete}
+                className="animate-slide-up"
+                style={{ animationDelay: `${0.1 * (index + 1)}s` }}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-muted">
+              {searchQuery
+                ? "No tasks found matching your search."
+                : filter !== "all"
+                  ? `No ${filter} tasks found.`
+                  : "No tasks found. Create your first task!"}
+            </p>
+            <button
+              onClick={() => setShowAddTaskModal(true)}
+              className="mt-4 inline-flex items-center px-4 py-2 bg-primary-color text-white rounded-lg 
+              hover:bg-secondary-color transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group"
+            >
+              <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform" />
+              Add Task
+            </button>
+          </div>
+        )}
+      </div>
+
+      {showAddTaskModal && (
+        <AddTaskModal
+          isOpen={showAddTaskModal}
+          onClose={() => setShowAddTaskModal(false)}
+          onTaskAdded={() => {
+            setShowAddTaskModal(false);
+            fetchTasks();
+          }}
+        />
+      )}
+
+      {taskToComplete && (
+        <TaskCompletionModal
+          isOpen={!!taskToComplete}
+          onClose={() => setTaskToComplete(null)}
+          task={taskToComplete}
+          onComplete={handleTaskCompletion}
+        />
       )}
     </div>
-
-    {showAddTaskModal && (
-      <AddTaskModal
-        isOpen={showAddTaskModal}
-        onClose={() => setShowAddTaskModal(false)}
-        onTaskAdded={() => {
-          setShowAddTaskModal(false);
-          fetchTasks();
-        }}
-      />
-    )}
-
-    {taskToComplete && (
-      <TaskCompletionModal
-        isOpen={!!taskToComplete}
-        onClose={() => setTaskToComplete(null)}
-        task={taskToComplete}
-        onComplete={handleTaskCompletion}
-      />
-    )}
-  </div>
-</div>
   )
 }

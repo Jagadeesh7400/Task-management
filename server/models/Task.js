@@ -12,8 +12,13 @@ const taskSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["pending", "completed", "archived"],
+    enum: ["pending", "inProgress", "completed", "archived"],
     default: "pending",
+  },
+  priority: {
+    type: String,
+    enum: ["low", "medium", "high"],
+    default: "medium",
   },
   deadline: {
     type: Date,
@@ -32,6 +37,46 @@ const taskSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
+  tags: [
+    {
+      type: String,
+      trim: true,
+    },
+  ],
+  attachments: [
+    {
+      name: String,
+      url: String,
+      type: String,
+    },
+  ],
+  comments: [
+    {
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+      text: {
+        type: String,
+        required: true,
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
+})
+
+// Update the updatedAt field on save
+taskSchema.pre("save", function (next) {
+  this.updatedAt = Date.now()
+  next()
 })
 
 module.exports = mongoose.model("Task", taskSchema)

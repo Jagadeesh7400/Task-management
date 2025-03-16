@@ -1,265 +1,196 @@
-/* ==============================
-   🔹 Root Variables (Color Palette)
-   ============================== */
-   :root {
-    --color-primary-dark: #03045e; /* Dark Blue */
-    --color-primary: #023e8a; /* Blue */
-    --color-secondary: #0077b6; /* Light Blue */
-    --color-accent: #0096c7; /* Accent Color */
-    --color-highlight: #00b4d8; /* Highlight Color */
-    --color-light-blue: #90e0ef; /* Light Blue */
-    --color-lightest: #caf0f8; /* Lightest Color */
-    --color-text-light: #f8f9fa; /* Light Text */
-    --color-text-dark: #222; /* Dark Text */
-    --color-error: #d32f2f; /* Error Color */
+/* Auth Pages */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-bg) 100%);
+}
 
-  
-    /* Other Variables */
-    --border-radius: 12px;
-    --box-shadow-3d: 0px 5px 15px rgba(0, 0, 0, 0.2);
-    --transition-speed: 0.3s ease-in-out;
-  }
-  
-  /* ==============================
-       🔹 Page Background & Centering
-       ============================== */
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, var(--color-primary-dark), var(--color-accent));
-    font-family: "Poppins", sans-serif;
-    margin: 0;
-  }
-  
-  /* ==============================
-       🔹 Authentication Box (3D Look)
-       ============================== */
-  .auth-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    min-height: 100vh;
-  }
-  
-  .auth-box {
-    background: var(--color-lightest);
-    padding: 2rem;
-    width: 100%;
-    max-width: 400px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow-3d);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    animation: fadeIn 0.5s ease-in-out;
-  }
-  
-  /* ==============================
-       🔹 Logo & Title
-       ============================== */
-  .auth-header {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .auth-logo {
-    width: 60px;
-  }
-  
-  .auth-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--color-primary-dark);
-    margin-bottom: 1rem;
-  }
-  
-  /* ==============================
-       🔹 Form Styling
-       ============================== */
-  .auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .auth-label {
-    font-size: 0.9rem;
-    color: var(--color-primary);
-    margin-bottom: 0.3rem;
-    font-weight: 500;
-  }
-  
-  /* ==============================
-     🔹 Input Fields (Eye Icon Inside)
-     ============================== */
-  .auth-input-group {
-    position: relative;
-  }
-  
-  .auth-input {
-    width: 100%;
-    padding: 0.8rem;
-    padding-right: 2.5rem;
-    border: 1px solid var(--color-light-blue);
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: var(--transition-speed);
-    box-shadow: inset 0px 3px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .auth-input:focus {
-    border-color: var(--color-highlight);
-    outline: none;
-    box-shadow: 0 0 5px var(--color-highlight);
-  }
-  
-  /* Eye Icon Inside Input */
-  .auth-icon-btn {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--color-primary);
-    font-size: 1.2rem;
-  }
-  
-  .auth-icon-btn:hover {
-    color: var(--color-secondary);
-  }
-  
-  /* ==============================
-     🔹 Remember Me & Forgot Password
-     ============================== */
-  .auth-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.85rem;
-  }
-  
-  .auth-remember {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  .auth-checkbox {
-    width: 16px;
-    height: 16px;
-    accent-color: var(--color-secondary);
-    cursor: pointer;
-  }
-  
-  .auth-link {
-    color: var(--color-primary);
-    text-decoration: none;
-    font-weight: 500;
-  }
-  
-  .auth-link:hover {
-    text-decoration: underline;
-  }
-  
-  /* ==============================
-       🔹 Buttons (3D Effect)
-       ============================== */
-  .auth-btn {
-    padding: 0.8rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: var(--color-secondary);
-    color: #fff;
-    font-weight: 600;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: var(--transition-speed);
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  .auth-btn:hover {
-    background: var(--color-accent);
-    transform: translateY(-3px);
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
-  }
-  
-  /* Login Button with Icon */
-  .auth-btn-text {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .auth-btn-icon {
-    font-size: 1.2rem;
-  }
-  
-  /* ==============================
-       🔹 Loading Spinner
-       ============================== */
-  .auth-loading {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  .auth-spinner {
-    width: 20px;
-    height: 20px;
-    animation: spin 1s linear infinite;
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  /* ==============================
-       🔹 Footer
-       ============================== */
-  .auth-footer {
-    font-size: 0.9rem;
-  }
-  
-  .auth-footer .auth-link {
-    font-weight: bold;
-  }
-  
-  /* ==============================
-       🔹 Animations
-       ============================== */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* ==============================
-       🔹 Responsive Design
-       ============================== */
-  @media (max-width: 600px) {
-    .auth-box {
-      padding: 1.5rem;
-    }
-  }
-  
-  @media (max-width: 400px) {
-    .auth-box {
-      padding: 1.5rem;
-      max-width: 100%;
-    }
-  }
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: rgba(202, 240, 248, 0.9);
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.auth-header {
+  padding: 2rem 2rem 1rem;
+  text-align: center;
+}
+
+.auth-logo {
+  margin-bottom: 1.5rem;
+  display: inline-block;
+}
+
+.auth-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dark-bg);
+  margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.auth-form {
+  padding: 1.5rem 2rem 2rem;
+}
+
+.auth-form .form-group {
+  margin-bottom: 1.25rem;
+}
+
+.auth-form .form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--dark-bg);
+}
+
+.auth-form .form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
+  background-color: white;
+  transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.auth-form .form-control:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.2);
+  outline: none;
+}
+
+.auth-form .password-input {
+  position: relative;
+}
+
+.auth-form .password-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.auth-form .form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.auth-form .form-check-input {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.auth-form .form-check-label {
+  font-size: 0.875rem;
+  color: var(--text-dark);
+  cursor: pointer;
+}
+
+.auth-form .forgot-password {
+  font-size: 0.875rem;
+  color: var(--primary-blue);
+  text-decoration: none;
+  transition: color var(--transition-speed) ease;
+  float: right;
+}
+
+.auth-form .forgot-password:hover {
+  color: var(--primary-dark-blue);
+  text-decoration: underline;
+}
+
+.auth-form .btn-auth {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-speed) ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.auth-form .btn-auth:hover {
+  background-color: var(--primary-dark-blue);
+}
+
+.auth-form .btn-auth:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.auth-footer {
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 0.875rem;
+  color: var(--text-dark);
+}
+
+.auth-footer a {
+  color: var(--primary-blue);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition-speed) ease;
+}
+
+.auth-footer a:hover {
+  color: var(--primary-dark-blue);
+  text-decoration: underline;
+}
+
+/* Auth Verification */
+.verification-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.verification-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.verification-icon.success {
+  color: var(--status-completed);
+}
+
+.verification-icon.error {
+  color: var(--status-closed);
+}
+
+.verification-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.verification-message {
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+

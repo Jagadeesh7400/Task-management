@@ -1,10 +1,24 @@
-const jwt = require("jsonwebtoken")
 const User = require("../models/User")
 const { sendResetPasswordEmail } = require("../utils/emailService")
 const crypto = require("crypto")
 const { sendVerificationEmail } = require("../utils/emailService")
+const jwt = require("jsonwebtoken") // Import jwt for token validation
 
 // Register with email verification
+exports.validateToken = async (req, res) => {
+  const token = req.headers['authorization']?.split(' ')[1]; // Get token from headers
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+    res.json({ message: "Token is valid", userId: decoded.id });
+  });
+}
+
 exports.register = async (req, res) => {
   try {
     const { name, email, password } = req.body
@@ -83,7 +97,6 @@ exports.verifyEmail = async (req, res) => {
   }
 }
 
-// Login user
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body
@@ -181,4 +194,3 @@ exports.resetPassword = async (req, res) => {
     res.status(500).json({ message: "Server error" })
   }
 }
-

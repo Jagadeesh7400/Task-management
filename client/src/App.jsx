@@ -2,38 +2,26 @@
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
 import { Toaster } from "react-hot-toast"
-import { AuthProvider, useAuth } from "./hooks/useAuth"
+import { AuthProvider } from "./hooks/useAuth"
 import { TasksProvider } from "./hooks/useTasks"
 import { ThemeProvider } from "./hooks/useTheme"
 import MainLayout from "./components/layout/MainLayout"
-import Unauthorized from "./pages/Unauthorized"
-import VerifyEmail from "./pages/auth/VerifyEmail"
-import AuditLogs from "./pages/admin/AuditLogs"
 import Login from "./pages/auth/Login"
 import Register from "./pages/auth/Register"
 import ForgotPassword from "./pages/auth/ForgotPassword"
+import VerifyEmail from "./pages/auth/VerifyEmail"
 import Dashboard from "./pages/Dashboard"
+import TasksPage from "./pages/TasksPage"
 import Profile from "./pages/Profile"
+import Unauthorized from "./pages/Unauthorized"
 import AdminDashboard from "./pages/admin/AdminDashboard"
+import UserManagement from "./pages/admin/UserManagement"
+import UserEdit from "./pages/admin/UserEdit"
+import AuditLogs from "./pages/admin/AuditLogs"
+import ProtectedRoute from "./components/auth/ProtectedRoute"
 
-// Protected route component
-const ProtectedRoute = ({ children, requireAdmin = false }) => {
-  const { user, isLoading } = useAuth()
-
-  if (isLoading) {
-    return null // Show loading screen in MainLayout
-  }
-
-  if (!user) {
-    return <Navigate to="/login" />
-  }
-
-  if (requireAdmin && user.role !== "admin") {
-    return <Navigate to="/" />
-  }
-
-  return children
-}
+// Import CSS
+import "./styles/index.css"
 
 export default function App() {
   return (
@@ -46,6 +34,9 @@ export default function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/verify-email/:token" element={<VerifyEmail />} />
+              <Route path="/verification-required" element={<div>Please verify your email</div>} />
+              <Route path="/unauthorized" element={<Unauthorized />} />
 
               {/* Protected routes */}
               <Route
@@ -57,7 +48,7 @@ export default function App() {
                 }
               >
                 <Route index element={<Dashboard />} />
-                <Route path="tasks" element={<Dashboard />} />
+                <Route path="tasks" element={<TasksPage />} />
                 <Route path="profile" element={<Profile />} />
 
                 {/* Admin routes */}
@@ -66,6 +57,22 @@ export default function App() {
                   element={
                     <ProtectedRoute requireAdmin>
                       <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="admin/users"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <UserManagement />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="admin/users/:id/edit"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <UserEdit />
                     </ProtectedRoute>
                   }
                 />
@@ -81,8 +88,6 @@ export default function App() {
 
               {/* Fallback route */}
               <Route path="*" element={<Navigate to="/" />} />
-              <Route path="/unauthorized" element={<Unauthorized />} />
-              <Route path="/verify-email/:token" element={<VerifyEmail />} />
             </Routes>
           </Router>
 
@@ -104,3 +109,4 @@ export default function App() {
     </ThemeProvider>
   )
 }
+

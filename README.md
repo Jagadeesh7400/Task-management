@@ -14,6 +14,7 @@ Zidio is a **modern task management system** designed to streamline workflows, e
 - Task **priority levels & deadlines**
 - **Task countdown timer & completion alerts**
 
+
 ### **🔹 Admin Panel**
 - **User & Task Monitoring Dashboard**
 - **Advanced Analytics** (User performance tracking)

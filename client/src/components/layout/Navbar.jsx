@@ -39,7 +39,7 @@ export default function Navbar({ onMenuButtonClick }) {
   }
 
   return (
-    <header className="navbar glass dark:bg-dark-color dark:bg-opacity-80 border-b border-white border-opacity-20 animate-slide-down">
+    <header className="navbar">
       <div className="navbar-content flex items-center justify-between h-16 px-4 md:px-6">
         <div className="flex items-center">
           <button 

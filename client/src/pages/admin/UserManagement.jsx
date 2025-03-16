@@ -57,10 +57,13 @@ export default function UserManagement() {
   return (
 <div className="user-management-container animate-fade-in">
 
+
 <div className="user-management-header flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+
 
         <div>
 <h1 className="user-management-title text-2xl font-bold text-primary-color dark:text-secondary-color">User Management</h1>
+
 
           <p className="text-dark-color dark:text-light-color opacity-80">Manage all users in the system</p>
         </div>
@@ -77,7 +80,9 @@ export default function UserManagement() {
 
 <div className="user-management-table-container glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-4 md:p-6 animate-slide-up">
 
+
 <div className="user-management-actions flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+
 
           <form onSubmit={handleSearch} className="relative w-full md:w-64">
             <input
@@ -148,7 +153,9 @@ export default function UserManagement() {
         ) : (
 <div className="user-management-table overflow-x-auto">
 
+
 <table className="user-management-table min-w-full divide-y divide-white divide-opacity-20">
+
 
               <thead>
                 <tr>

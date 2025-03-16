@@ -24,9 +24,9 @@ export default function MainLayout() {
   }
 
   return (
-    <div className="auth-wrapper">
+    <div className="app-container">
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} isMobile={isMobile} />
-      <div className="auth-box">
+      <div className="main-content">
         <Navbar onMenuButtonClick={() => setSidebarOpen(true)} />
         <main className="flex-1 overflow-y-auto p-4 md:p-6 animate-slide-up">
           <div className="max-w-7xl mx-auto">

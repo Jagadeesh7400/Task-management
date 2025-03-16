@@ -53,7 +53,7 @@ export default function AddTaskModal({ isOpen, onClose, onTaskAdded }) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 animate-fade-in task-form">
       <div className="glass dark:bg-dark-color dark:bg-opacity-90 rounded-lg shadow-xl w-full max-w-md animate-slide-up">
         <div className="flex justify-between items-center p-4 border-b border-white border-opacity-20">
           <h2 className="text-lg font-semibold text-primary-color dark:text-secondary-color">Add New Task</h2>
@@ -65,7 +65,7 @@ export default function AddTaskModal({ isOpen, onClose, onTaskAdded }) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4">
+        <form onSubmit={handleSubmit} className="p-4 task-form">
           {error && <div className="mb-4 p-3 bg-danger-color bg-opacity-10 border border-danger-color border-opacity-20 text-danger-color rounded animate-shake">{error}</div>}
 
           <div className="mb-4 group">
@@ -122,7 +122,7 @@ export default function AddTaskModal({ isOpen, onClose, onTaskAdded }) {
             </select>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="form-row grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div className="group">
               <label htmlFor="date" className="block text-sm font-medium text-dark-color dark:text-light-color mb-1 group-hover:text-primary-color dark:group-hover:text-secondary-color transition-colors">
                 Date *
@@ -162,7 +162,7 @@ export default function AddTaskModal({ isOpen, onClose, onTaskAdded }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 glass border border-white border-opacity-20 rounded-md
+              className="px-4 py-2 glass border border-white border-opacity-20 rounded-md task-action-btn
               text-dark-color dark:text-light-color hover:bg-white hover:bg-opacity-10 transition-all"
             >
               Cancel
