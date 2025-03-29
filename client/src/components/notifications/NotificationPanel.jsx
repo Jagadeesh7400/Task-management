@@ -64,8 +64,8 @@ export default function NotificationPanel() {
   }
 
   return (
-    <div className="notification-panel absolute right-0 mt-2 w-80 bg-white dark:bg-dark-color rounded-lg shadow-lg overflow-hidden z-50 border border-ade8f4 dark:border-023e8a">
-      <div className="notification-header p-4 border-b border-ade8f4 dark:border-023e8a">
+    <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-03045e rounded-lg shadow-lg overflow-hidden z-50 border border-ade8f4 dark:border-023e8a">
+      <div className="p-4 border-b border-ade8f4 dark:border-023e8a">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-0077b6 dark:text-48cae4">Notifications</h3>
           <button onClick={markAllAsRead} className="text-sm text-0077b6 dark:text-48cae4 hover:underline">
@@ -98,18 +98,18 @@ export default function NotificationPanel() {
               }`}
             >
               <div className="flex">
-                <div className="notification-icon flex-shrink-0 mr-3">{getIcon(notification.type)}</div>
+                <div className="flex-shrink-0 mr-3">{getIcon(notification.type)}</div>
                 <div className="flex-1">
                   <div className="flex items-start justify-between">
-                    <p className="notification-title text-sm font-medium text-0077b6 dark:text-48cae4">{notification.title}</p>
+                    <p className="text-sm font-medium text-0077b6 dark:text-48cae4">{notification.title}</p>
                     {!notification.read && (
                       <button onClick={() => markAsRead(notification.id)} className="ml-2">
                         <X className="h-4 w-4 text-0077b6 dark:text-48cae4" />
                       </button>
                     )}
                   </div>
-                  <p className="notification-message text-xs text-gray-600 dark:text-gray-300 mt-1">{notification.message}</p>
-                  <p className="notification-time text-xs text-gray-500 dark:text-gray-400 mt-1">{notification.time}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">{notification.message}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{notification.time}</p>
                 </div>
               </div>
             </div>
@@ -125,3 +125,4 @@ export default function NotificationPanel() {
     </div>
   )
 }
+

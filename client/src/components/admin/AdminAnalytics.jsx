@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Activity, Users, CheckSquare, Clock, Calendar } from "lucide-react"
 import { useAdmin } from "../../hooks/useAdmin"
+import "../../styles/admin.css"
 
 export default function AdminAnalytics() {
   const { getStats } = useAdmin()
@@ -71,8 +72,7 @@ export default function AdminAnalytics() {
   }
 
   return (
-    <div className="admin-stats">
-
+    <div className="space-y-6">
       {/* Time Range Selector */}
       <div className="flex justify-end mb-4">
         <div className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg p-1 flex">
@@ -111,11 +111,13 @@ export default function AdminAnalytics() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="stat-card glass dark:bg-dark-color dark:bg-opacity-50">
+        <div className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="stat-title">Total Users</p>
-              <h3 className="stat-value">{stats?.totalUsers || 0}</h3>
+              <p className="text-sm text-dark-color dark:text-light-color opacity-70">Total Users</p>
+              <h3 className="text-2xl font-bold text-primary-color dark:text-secondary-color">
+                {stats?.totalUsers || 0}
+              </h3>
               <p className="text-xs text-success-color mt-1">
                 <span className="inline-block mr-1">↑</span>
                 12% from last {timeRange}
@@ -127,11 +129,11 @@ export default function AdminAnalytics() {
           </div>
         </div>
 
-        <div className="stat-card glass dark:bg-dark-color dark:bg-opacity-50">
+        <div className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="stat-title">Total Tasks</p>
-              <h3 className="stat-value">{stats?.totalTasks || 0}</h3>
+              <p className="text-sm text-dark-color dark:text-light-color opacity-70">Total Tasks</p>
+              <h3 className="text-2xl font-bold text-success-color">{stats?.totalTasks || 0}</h3>
               <p className="text-xs text-success-color mt-1">
                 <span className="inline-block mr-1">↑</span>
                 8% from last {timeRange}
@@ -143,11 +145,11 @@ export default function AdminAnalytics() {
           </div>
         </div>
 
-        <div className="stat-card glass dark:bg-dark-color dark:bg-opacity-50">
+        <div className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="stat-title">Completion Rate</p>
-              <h3 className="stat-value">{stats?.completionRate || 0}%</h3>
+              <p className="text-sm text-dark-color dark:text-light-color opacity-70">Completion Rate</p>
+              <h3 className="text-2xl font-bold text-warning-color">{stats?.completionRate || 0}%</h3>
               <p className="text-xs text-danger-color mt-1">
                 <span className="inline-block mr-1">↓</span>
                 3% from last {timeRange}
@@ -159,11 +161,11 @@ export default function AdminAnalytics() {
           </div>
         </div>
 
-        <div className="stat-card glass dark:bg-dark-color dark:bg-opacity-50">
+        <div className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="stat-title">Avg. Completion Time</p>
-              <h3 className="stat-value">2.4 days</h3>
+              <p className="text-sm text-dark-color dark:text-light-color opacity-70">Avg. Completion Time</p>
+              <h3 className="text-2xl font-bold text-info-color">2.4 days</h3>
               <p className="text-xs text-success-color mt-1">
                 <span className="inline-block mr-1">↑</span>
                 5% faster than last {timeRange}
@@ -389,3 +391,4 @@ function TaskDistributionChart({ data }) {
     </div>
   )
 }
+

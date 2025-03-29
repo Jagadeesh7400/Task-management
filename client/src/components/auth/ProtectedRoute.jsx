@@ -1,47 +1,33 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Outlet } from "react-router-dom"
-import Sidebar from "../layout/Sidebar"
-
-import Navbar from "../layout/Navbar"
+import { Navigate, useLocation } from "react-router-dom"
 import { useAuth } from "../../hooks/useAuth"
 import LoadingScreen from "../ui/LoadingScreen"
+import "../../styles/auth.css"
 
-export default function MainLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { isLoading } = useAuth()
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
+export default function ProtectedRoute({ children, requireAdmin = false, requireVerified = true }) {
+  const { user, isLoading } = useAuth()
+  const location = useLocation()
 
   if (isLoading) {
     return <LoadingScreen />
   }
 
-  return (
-    <div className="auth-container">
+  if (!user) {
+    // Redirect to login page and save the location they were trying to access
+    return <Navigate to="/login" state={{ from: location }} replace />
+  }
 
+  if (requireVerified && !user.isVerified) {
+    // Redirect to verification reminder page
+    return <Navigate to="/verification-required" replace />
+  }
 
-      <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} isMobile={isMobile} />
-      <div className="auth-card">
+  if (requireAdmin && user.role !== "admin") {
+    // Redirect to unauthorized page
+    return <Navigate to="/unauthorized" replace />
+  }
 
-
-        <Navbar onMenuButtonClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
-
-          <div className="max-w-7xl mx-auto">
-            <Outlet />
-          </div>
-        </main>
-      </div>
-    </div>
-  )
+  return children
 }
+

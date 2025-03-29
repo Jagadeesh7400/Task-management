@@ -3,15 +3,14 @@
 import { useState, useEffect, useCallback } from "react"
 import { Calendar, CheckCircle, Clock, Plus, XCircle, Filter, Search, Download } from "lucide-react"
 import { useAuth } from "../hooks/useAuth"
-import { useNotifications } from "../hooks/useNotifications"
 import { useTasks } from "../hooks/useTasks"
 import TaskCard from "../components/tasks/TaskCard"
 import AddTaskModal from "../components/tasks/AddTaskModal"
 import TaskCompletionModal from "../components/tasks/TaskCompletionModal"
-import { exportToCSV } from "../utils/exportUtils"
+import { exportTasksToCSV } from "../utils/exportUtils"
+import "../../styles/admin.css"
 
 export default function Dashboard() {
-  const { notifications, unreadCount, fetchNotifications } = useNotifications(); // Integrate notifications
   const { user } = useAuth()
   const { tasks, isLoading, fetchTasks } = useTasks()
   const [showAddTaskModal, setShowAddTaskModal] = useState(false)
@@ -30,9 +29,8 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("")
 
   useEffect(() => {
-    fetchTasks();
-    fetchNotifications(); // Fetch notifications on mount
-  }, [fetchTasks, fetchNotifications])
+    fetchTasks()
+  }, [fetchTasks])
 
   useEffect(() => {
     if (tasks) {
@@ -114,16 +112,16 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="dashboard-container animate-fade-in">
-      <div className="dashboard-header">
+    <div className="animate-fade-in">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
-          <h1 className="dashboard-title">
-            Welcome back, {user?.name || "User "}
+          <h1 className="text-2xl font-bold text-primary-color dark:text-secondary-color">
+            Welcome back, {user?.name || "User"}
           </h1>
-          <p className="text-muted">Here's an overview of your tasks</p>
+          <p className="text-dark-color dark:text-light-color opacity-80">Here's an overview of your tasks</p>
         </div>
 
-        <div className="dashboard-actions">
+        <div className="mt-4 md:mt-0 flex flex-wrap gap-2">
           <button
             onClick={() => setShowAddTaskModal(true)}
             className="flex items-center px-4 py-2 bg-primary-color text-white rounded-lg 
@@ -134,7 +132,7 @@ export default function Dashboard() {
           </button>
 
           <button
-            onClick={() => exportToCSV(filteredAndSortedTasks)}
+            onClick={() => exportTasksToCSV(filteredAndSortedTasks)}
             className="flex items-center px-4 py-2 glass border border-white border-opacity-20 rounded-lg
             text-dark-color dark:text-light-color hover:bg-white hover:bg-opacity-10 transition-all group"
             disabled={filteredAndSortedTasks.length === 0}
@@ -146,58 +144,77 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="dashboard-widget" onClick={() => setFilter("all")}>
-          <div className="widget-header">
+        <div
+          className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg p-4 border border-white border-opacity-20 animate-slide-up cursor-pointer hover:-translate-y-1 transition-transform"
+          style={{ animationDelay: "0.1s" }}
+          onClick={() => setFilter("all")}
+        >
+          <div className="flex items-center">
             <div className="p-3 rounded-full bg-primary-color bg-opacity-10 text-primary-color dark:text-secondary-color mr-4">
               <Calendar className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm text-muted">Total Tasks</p>
-              <p className="text-xl font-semibold text-dark">{stats.total}</p>
+              <p className="text-sm text-dark-color dark:text-light-color opacity-80">Total Tasks</p>
+              <p className="text-xl font-semibold text-primary-color dark:text-secondary-color">{stats.total}</p>
             </div>
           </div>
         </div>
 
-        <div className="dashboard-widget" onClick={() => setFilter("completed")}>
-          <div className="widget-header">
+        <div
+          className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg p-4 border border-white border-opacity-20 animate-slide-up cursor-pointer hover:-translate-y-1 transition-transform"
+          style={{ animationDelay: "0.2s" }}
+          onClick={() => setFilter("completed")}
+        >
+          <div className="flex items-center">
             <div className="p-3 rounded-full bg-success-color bg-opacity-10 text-success-color mr-4">
               <CheckCircle className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm text-muted">Completed</p>
-              <p className="text-xl font-semibold text-dark">{stats.completed}</p>
+              <p className="text-sm text-dark-color dark:text-light-color opacity-80">Completed</p>
+              <p className="text-xl font-semibold text-success-color">{stats.completed}</p>
             </div>
           </div>
         </div>
 
-        <div className="dashboard-widget" onClick={() => setFilter("pending")}>
-          <div className="widget-header">
+        <div
+          className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg p-4 border border-white border-opacity-20 animate-slide-up cursor-pointer hover:-translate-y-1 transition-transform"
+          style={{ animationDelay: "0.3s" }}
+          onClick={() => setFilter("pending")}
+        >
+          <div className="flex items-center">
             <div className="p-3 rounded-full bg-warning-color bg-opacity-10 text-warning-color mr-4">
               <Clock className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm text-muted">Pending</p>
-              <p className="text-xl font-semibold text-dark">{stats.pending}</p>
+              <p className="text-sm text-dark-color dark:text-light-color opacity-80">Pending</p>
+              <p className="text-xl font-semibold text-warning-color">{stats.pending}</p>
             </div>
           </div>
         </div>
 
-        <div className="dashboard-widget" onClick={() => setFilter("overdue")}>
-          <div className="widget-header">
+        <div
+          className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg p-4 border border-white border-opacity-20 animate-slide-up cursor-pointer hover:-translate-y-1 transition-transform"
+          style={{ animationDelay: "0.4s" }}
+          onClick={() => setFilter("overdue")}
+        >
+          <div className="flex items-center">
             <div className="p-3 rounded-full bg-danger-color bg-opacity-10 text-danger-color mr-4">
               <XCircle className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-sm text-muted">Overdue</p>
-              <p className="text-xl font-semibold text-dark">{stats.overdue}</p>
+              <p className="text-sm text-dark-color dark:text-light-color opacity-80">Overdue</p>
+              <p className="text-xl font-semibold text-danger-color">{stats.overdue}</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="dashboard-card">
-        <div className="card-header">
-          <h2 className="text-xl font-semibold text-dark">
+      <div
+        className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-4 md:p-6 animate-slide-up"
+        style={{ animationDelay: "0.5s" }}
+      >
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+          <h2 className="text-xl font-semibold text-primary-color dark:text-secondary-color">
             {filter === "all"
               ? "All Tasks"
               : filter === "pending"
@@ -207,7 +224,7 @@ export default function Dashboard() {
                   : "Overdue Tasks"}
           </h2>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 w-full md:w-auto">
             <form onSubmit={handleSearch} className="relative w-full md:w-64">
               <input
                 type="text"
@@ -265,7 +282,7 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="text-center py-8">
-            <p className="text-muted">
+            <p className="text-dark-color dark:text-light-color opacity-80">
               {searchQuery
                 ? "No tasks found matching your search."
                 : filter !== "all"
@@ -289,8 +306,8 @@ export default function Dashboard() {
           isOpen={showAddTaskModal}
           onClose={() => setShowAddTaskModal(false)}
           onTaskAdded={() => {
-            setShowAddTaskModal(false);
-            fetchTasks();
+            setShowAddTaskModal(false)
+            fetchTasks()
           }}
         />
       )}
@@ -306,3 +323,4 @@ export default function Dashboard() {
     </div>
   )
 }
+

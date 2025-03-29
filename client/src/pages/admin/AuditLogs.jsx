@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useAdmin } from "../../hooks/useAdmin"
 import { Download, Filter, RefreshCw, Search, User, FileText, Activity } from "lucide-react"
 import { exportToCSV } from "../../utils/exportUtils"
+import "../../styles/admin.css"
 
 export default function AuditLogs() {
   const { getAuditLogs } = useAdmin()
@@ -113,14 +114,14 @@ export default function AuditLogs() {
   }
 
   return (
-    <div className="audit-logs-container animate-fade-in">
-      <div className="audit-logs-header flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+    <div className="animate-fade-in">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
-          <h1 className="audit-logs-title text-2xl font-bold text-primary-color dark:text-secondary-color">Audit Logs</h1>
-          <p className="audit-logs-description text-dark-color dark:text-light-color opacity-80">Track all user activities in the system</p>
+          <h1 className="text-2xl font-bold text-primary-color dark:text-secondary-color">Audit Logs</h1>
+          <p className="text-dark-color dark:text-light-color opacity-80">Track all user activities in the system</p>
         </div>
 
-        <div className="audit-logs-actions mt-4 md:mt-0 flex flex-wrap gap-2">
+        <div className="mt-4 md:mt-0 flex flex-wrap gap-2">
           <button
             onClick={handleExport}
             className="flex items-center px-4 py-2 glass border border-white border-opacity-20 rounded-lg
@@ -141,7 +142,7 @@ export default function AuditLogs() {
         </div>
       </div>
 
-      <div className="audit-logs-filter glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-4 md:p-6 animate-slide-up">
+      <div className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-4 md:p-6 animate-slide-up">
         <form onSubmit={handleFilter} className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
           <div className="group">
             <label className="block text-sm font-medium text-dark-color dark:text-light-color mb-1 group-hover:text-primary-color dark:group-hover:text-secondary-color transition-colors">
@@ -241,8 +242,8 @@ export default function AuditLogs() {
           </div>
         ) : (
           <>
-            <div className="audit-logs-table-container overflow-x-auto">
-              <table className="audit-logs-table min-w-full divide-y divide-white divide-opacity-20">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-white divide-opacity-20">
                 <thead>
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-medium text-dark-color dark:text-light-color opacity-70 uppercase tracking-wider">
@@ -262,7 +263,7 @@ export default function AuditLogs() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="audit-logs-body divide-y divide-white divide-opacity-10">
+                <tbody className="divide-y divide-white divide-opacity-10">
                   {logs.length > 0 ? (
                     logs.map((log) => (
                       <tr key={log._id} className="hover:bg-white hover:bg-opacity-5 transition-colors">
@@ -381,3 +382,4 @@ export default function AuditLogs() {
     </div>
   )
 }
+

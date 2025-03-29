@@ -1,307 +1,300 @@
 "use client"
 
-import { useState } from "react"
-import { Camera, Facebook, Github, Linkedin, Save, Twitter } from "lucide-react"
-import { useAuth } from "../hooks/useAuth"
+import { useState, useEffect } from "react"
+import { Camera, Save, Twitter, Linkedin, Github, Facebook } from "lucide-react"
+import "../styles/profile.css"
 
-export default function Profile() {
-  const { user, updateProfile } = useAuth()
+const Profile = () => {
+  const [user, setUser] = useState(null)
   const [isEditing, setIsEditing] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState("")
-
+  const [isLoading, setIsLoading] = useState(true)
   const [formData, setFormData] = useState({
-    name: user?.name || "",
-    occupation: user?.occupation || "",
-    location: user?.location || "",
-    bio: user?.bio || "",
+    name: "",
+    email: "",
+    occupation: "",
+    location: "",
+    bio: "",
     socialLinks: {
-      twitter: user?.socialLinks?.twitter || "",
-      linkedin: user?.socialLinks?.linkedin || "",
-      github: user?.socialLinks?.github || "",
-      facebook: user?.socialLinks?.facebook || "",
+      twitter: "",
+      linkedin: "",
+      github: "",
+      facebook: "",
     },
   })
+
+  useEffect(() => {
+    // Simulate API call
+    setTimeout(() => {
+      const userData = {
+        id: "1",
+        name: "John Doe",
+        email: "john@example.com",
+        occupation: "Full Stack Developer",
+        location: "New York, USA",
+        bio: "Passionate developer with 5+ years of experience in web and mobile application development. Specialized in React, Node.js, and cloud technologies.",
+        socialLinks: {
+          twitter: "https://twitter.com/johndoe",
+          linkedin: "https://linkedin.com/in/johndoe",
+          github: "https://github.com/johndoe",
+          facebook: "",
+        },
+        stats: {
+          tasksCompleted: 45,
+          tasksInProgress: 12,
+          tasksPending: 8,
+          completionRate: 78,
+        },
+      }
+
+      setUser(userData)
+      setFormData({
+        name: userData.name,
+        email: userData.email,
+        occupation: userData.occupation || "",
+        location: userData.location || "",
+        bio: userData.bio || "",
+        socialLinks: {
+          twitter: userData.socialLinks?.twitter || "",
+          linkedin: userData.socialLinks?.linkedin || "",
+          github: userData.socialLinks?.github || "",
+          facebook: userData.socialLinks?.facebook || "",
+        },
+      })
+      setIsLoading(false)
+    }, 1000)
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
 
     if (name.includes(".")) {
       const [parent, child] = name.split(".")
-      setFormData({
-        ...formData,
+      setFormData((prev) => ({
+        ...prev,
         [parent]: {
-          ...formData[parent],
+          ...prev[parent],
           [child]: value,
         },
-      })
+      }))
     } else {
-      setFormData({
-        ...formData,
+      setFormData((prev) => ({
+        ...prev,
         [name]: value,
-      })
+      }))
     }
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    setError("")
-    setSuccess("")
-    setIsLoading(true)
 
-    try {
-      await updateProfile(formData)
-      setSuccess("Profile updated successfully")
-      setIsEditing(false)
-    } catch (err) {
-      setError(err.message || "Failed to update profile")
-    } finally {
+    // Simulate API call
+    setIsLoading(true)
+    setTimeout(() => {
+      setUser((prev) => ({
+        ...prev,
+        ...formData,
+      }))
       setIsLoading(false)
-    }
+      setIsEditing(false)
+    }, 1000)
+  }
+
+  if (isLoading && !user) {
+    return (
+      <div className="loading-spinner-container">
+        <div className="loading-spinner"></div>
+      </div>
+    )
   }
 
   return (
-    <div className="profile-container max-w-4xl mx-auto">
-      <div className="profile-card bg-white dark:bg-03045e bg-opacity-80 backdrop-blur-md rounded-lg shadow border border-ade8f4 dark:border-023e8a overflow-hidden">
-        <div className="profile-header h-32 bg-gradient-to-r from-0077b6 to-00b4d8"></div>
+    <div className="profile-container">
+      <div className="profile-header card-3d">
+        <div className="profile-cover"></div>
 
-        <div className="profile-content px-4 sm:px-6 lg:px-8 pb-6">
-          <div className="profile-info flex flex-col sm:flex-row items-center sm:items-end -mt-16 sm:-mt-20 mb-6 sm:space-x-5">
-            <div className="profile-photo relative">
-              <div className="profile-photo-container w-32 h-32 rounded-full border-4 border-white dark:border-03045e bg-ade8f4 dark:bg-023e8a flex items-center justify-center text-0077b6 dark:text-48cae4 text-4xl font-bold overflow-hidden">
-                {user?.profilePhoto ? (
-                  <img
-                    src={user.profilePhoto || "/placeholder.svg"}
-                    alt={user.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  user?.name?.charAt(0) || "U"
-                )}
-
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-50 transition-opacity cursor-pointer group">
-                  <Camera className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
-              </div>
-            </div>
-
-            <div className="profile-name mt-4 sm:mt-0 text-center sm:text-left">
-              <h1 className="text-2xl font-bold text-0077b6 dark:text-48cae4">{user?.name || "User Profile"}</h1>
-              <p className="text-gray-600 dark:text-gray-300">
-                {user?.occupation || "No occupation set"}
-                {user?.location && ` • ${user.location}`}
-              </p>
-            </div>
-
-            <div className="profile-edit-button mt-4 sm:mt-0 sm:ml-auto">
-              <button
-                onClick={() => setIsEditing(!isEditing)}
-                className="px-4 py-2 bg-0077b6 text-white rounded-md hover:bg-023e8a"
-              >
-                {isEditing ? "Cancel" : "Edit Profile"}
-              </button>
-            </div>
+        <div className="profile-avatar-container">
+          <div className="profile-avatar">
+            {user?.name?.charAt(0) || "U"}
+            <button className="avatar-upload">
+              <Camera size={16} />
+            </button>
           </div>
 
-          {error && <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">{error}</div>}
+          <div className="profile-info">
+            <h1 className="profile-name">{user?.name}</h1>
+            <p className="profile-role">{user?.occupation || "No occupation set"}</p>
+          </div>
+        </div>
 
-          {success && <div className="success-message mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">{success}</div>}
+        <div className="profile-actions">
+          <button className="edit-profile-btn" onClick={() => setIsEditing(!isEditing)}>
+            {isEditing ? "Cancel" : "Edit Profile"}
+          </button>
+        </div>
+      </div>
 
-          {isEditing ? (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-0077b6 dark:text-48cae4 mb-1">
-                    Full Name
-                  </label>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-ade8f4 dark:border-023e8a rounded-md 
-                      focus:outline-none focus:ring-2 focus:ring-0077b6 dark:focus:ring-48cae4
-                      bg-white dark:bg-03045e text-0077b6 dark:text-white"
-                  />
+      {isEditing ? (
+        <div className="profile-edit card-3d">
+          <form onSubmit={handleSubmit}>
+            <div className="form-header">
+              <h2>Edit Profile</h2>
+            </div>
+
+            <div className="form-body">
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="name">Full Name</label>
+                  <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
                 </div>
 
-                <div>
-                  <label htmlFor="occupation" className="block text-sm font-medium text-0077b6 dark:text-48cae4 mb-1">
-                    Occupation
-                  </label>
+                <div className="form-group">
+                  <label htmlFor="email">Email</label>
                   <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="occupation">Occupation</label>
+                  <input
+                    type="text"
                     id="occupation"
                     name="occupation"
-                    type="text"
                     value={formData.occupation}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-ade8f4 dark:border-023e8a rounded-md 
-                      focus:outline-none focus:ring-2 focus:ring-0077b6 dark:focus:ring-48cae4
-                      bg-white dark:bg-03045e text-0077b6 dark:text-white"
                   />
                 </div>
 
-                <div>
-                  <label htmlFor="location" className="block text-sm font-medium text-0077b6 dark:text-48cae4 mb-1">
-                    Location
-                  </label>
-                  <input
-                    id="location"
-                    name="location"
-                    type="text"
-                    value={formData.location}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-ade8f4 dark:border-023e8a rounded-md 
-                      focus:outline-none focus:ring-2 focus:ring-0077b6 dark:focus:ring-48cae4
-                      bg-white dark:bg-03045e text-0077b6 dark:text-white"
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label htmlFor="bio" className="block text-sm font-medium text-0077b6 dark:text-48cae4 mb-1">
-                    Bio
-                  </label>
-                  <textarea
-                    id="bio"
-                    name="bio"
-                    rows={3}
-                    value={formData.bio}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-ade8f4 dark:border-023e8a rounded-md 
-                      focus:outline-none focus:ring-2 focus:ring-0077b6 dark:focus:ring-48cae4
-                      bg-white dark:bg-03045e text-0077b6 dark:text-white"
-                  />
+                <div className="form-group">
+                  <label htmlFor="location">Location</label>
+                  <input type="text" id="location" name="location" value={formData.location} onChange={handleChange} />
                 </div>
               </div>
 
-              <div>
-                <h3 className="text-lg font-medium text-0077b6 dark:text-48cae4 mb-3">Social Links</h3>
+              <div className="form-group">
+                <label htmlFor="bio">Bio</label>
+                <textarea id="bio" name="bio" rows="4" value={formData.bio} onChange={handleChange}></textarea>
+              </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex items-center">
-                    <Twitter className="h-5 w-5 text-[#1DA1F2] mr-2" />
+              <div className="form-section">
+                <h3>Social Links</h3>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="twitter">Twitter</label>
                     <input
+                      type="url"
+                      id="twitter"
                       name="socialLinks.twitter"
-                      type="text"
                       value={formData.socialLinks.twitter}
                       onChange={handleChange}
-                      placeholder="Twitter URL"
-                      className="w-full px-3 py-2 border border-ade8f4 dark:border-023e8a rounded-md 
-                        focus:outline-none focus:ring-2 focus:ring-0077b6 dark:focus:ring-48cae4
-                        bg-white dark:bg-03045e text-0077b6 dark:text-white"
                     />
                   </div>
 
-                  <div className="flex items-center">
-                    <Linkedin className="h-5 w-5 text-[#0A66C2] mr-2" />
+                  <div className="form-group">
+                    <label htmlFor="linkedin">LinkedIn</label>
                     <input
+                      type="url"
+                      id="linkedin"
                       name="socialLinks.linkedin"
-                      type="text"
                       value={formData.socialLinks.linkedin}
                       onChange={handleChange}
-                      placeholder="LinkedIn URL"
-                      className="w-full px-3 py-2 border border-ade8f4 dark:border-023e8a rounded-md 
-                        focus:outline-none focus:ring-2 focus:ring-0077b6 dark:focus:ring-48cae4
-                        bg-white dark:bg-03045e text-0077b6 dark:text-white"
                     />
                   </div>
+                </div>
 
-                  <div className="flex items-center">
-                    <Github className="h-5 w-5 text-gray-800 dark:text-white mr-2" />
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="github">GitHub</label>
                     <input
+                      type="url"
+                      id="github"
                       name="socialLinks.github"
-                      type="text"
                       value={formData.socialLinks.github}
                       onChange={handleChange}
-                      placeholder="GitHub URL"
-                      className="w-full px-3 py-2 border border-ade8f4 dark:border-023e8a rounded-md 
-                        focus:outline-none focus:ring-2 focus:ring-0077b6 dark:focus:ring-48cae4
-                        bg-white dark:bg-03045e text-0077b6 dark:text-white"
                     />
                   </div>
 
-                  <div className="flex items-center">
-                    <Facebook className="h-5 w-5 text-[#1877F2] mr-2" />
+                  <div className="form-group">
+                    <label htmlFor="facebook">Facebook</label>
                     <input
+                      type="url"
+                      id="facebook"
                       name="socialLinks.facebook"
-                      type="text"
                       value={formData.socialLinks.facebook}
                       onChange={handleChange}
-                      placeholder="Facebook URL"
-                      className="w-full px-3 py-2 border border-ade8f4 dark:border-023e8a rounded-md 
-                        focus:outline-none focus:ring-2 focus:ring-0077b6 dark:focus:ring-48cae4
-                        bg-white dark:bg-03045e text-0077b6 dark:text-white"
                     />
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="flex items-center px-4 py-2 bg-0077b6 text-white rounded-md hover:bg-023e8a
-                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-0077b6
-                    disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isLoading ? (
-                    <span className="flex items-center">
-                      <svg
-                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Saving...
-                    </span>
-                  ) : (
-                    <span className="flex items-center">
-                      <Save className="mr-2 h-4 w-4" />
-                      Save Changes
-                    </span>
+            <div className="form-actions">
+              <button type="button" className="btn-secondary" onClick={() => setIsEditing(false)}>
+                Cancel
+              </button>
+              <button type="submit" className="btn-primary" disabled={isLoading}>
+                {isLoading ? (
+                  <span className="loading-spinner-small"></span>
+                ) : (
+                  <>
+                    <Save size={16} />
+                    <span>Save Changes</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      ) : (
+        <>
+          <div className="profile-details card-3d">
+            <div className="details-header">
+              <h2>About</h2>
+            </div>
+            <div className="details-body">
+              <p>{user?.bio || "No bio available"}</p>
+
+              <div className="details-section">
+                <h3>Contact Information</h3>
+                <div className="contact-info">
+                  <div className="contact-item">
+                    <span className="contact-label">Email:</span>
+                    <span className="contact-value">{user?.email}</span>
+                  </div>
+                  {user?.location && (
+                    <div className="contact-item">
+                      <span className="contact-label">Location:</span>
+                      <span className="contact-value">{user.location}</span>
+                    </div>
                   )}
-                </button>
-              </div>
-            </form>
-          ) : (
-            <div className="profile-details space-y-6">
-              <div>
-                <h3 className="text-lg font-medium text-0077b6 dark:text-48cae4 mb-2">About</h3>
-                <p className="text-gray-600 dark:text-gray-300">{user?.bio || "No bio available"}</p>
+                </div>
               </div>
 
               {(user?.socialLinks?.twitter ||
                 user?.socialLinks?.linkedin ||
                 user?.socialLinks?.github ||
                 user?.socialLinks?.facebook) && (
-                <div>
-                  <h3 className="text-lg font-medium text-0077b6 dark:text-48cae4 mb-2">Social Links</h3>
-                  <div className="flex flex-wrap gap-4">
+                <div className="details-section">
+                  <h3>Social Links</h3>
+                  <div className="social-links">
                     {user?.socialLinks?.twitter && (
                       <a
                         href={user.socialLinks.twitter}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center text-[#1DA1F2] hover:underline"
+                        className="social-link twitter"
                       >
-                        <Twitter className="h-5 w-5 mr-1" />
-                        Twitter
+                        <Twitter size={16} />
+                        <span>Twitter</span>
                       </a>
                     )}
 
@@ -310,10 +303,10 @@ export default function Profile() {
                         href={user.socialLinks.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center text-[#0A66C2] hover:underline"
+                        className="social-link linkedin"
                       >
-                        <Linkedin className="h-5 w-5 mr-1" />
-                        LinkedIn
+                        <Linkedin size={16} />
+                        <span>LinkedIn</span>
                       </a>
                     )}
 
@@ -322,10 +315,10 @@ export default function Profile() {
                         href={user.socialLinks.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center text-gray-800 dark:text-white hover:underline"
+                        className="social-link github"
                       >
-                        <Github className="h-5 w-5 mr-1" />
-                        GitHub
+                        <Github size={16} />
+                        <span>GitHub</span>
                       </a>
                     )}
 
@@ -334,19 +327,51 @@ export default function Profile() {
                         href={user.socialLinks.facebook}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center text-[#1877F2] hover:underline"
+                        className="social-link facebook"
                       >
-                        <Facebook className="h-5 w-5 mr-1" />
-                        Facebook
+                        <Facebook size={16} />
+                        <span>Facebook</span>
                       </a>
                     )}
                   </div>
                 </div>
               )}
             </div>
-          )}
-        </div>
-      </div>
+          </div>
+
+          <div className="profile-stats card-3d">
+            <div className="stats-header">
+              <h2>Task Statistics</h2>
+            </div>
+            <div className="stats-body">
+              <div className="stats-grid">
+                <div className="stat-item">
+                  <div className="stat-value">{user?.stats?.tasksCompleted || 0}</div>
+                  <div className="stat-label">Completed</div>
+                </div>
+
+                <div className="stat-item">
+                  <div className="stat-value">{user?.stats?.tasksInProgress || 0}</div>
+                  <div className="stat-label">In Progress</div>
+                </div>
+
+                <div className="stat-item">
+                  <div className="stat-value">{user?.stats?.tasksPending || 0}</div>
+                  <div className="stat-label">Pending</div>
+                </div>
+
+                <div className="stat-item">
+                  <div className="stat-value">{user?.stats?.completionRate || 0}%</div>
+                  <div className="stat-label">Completion Rate</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
+
+export default Profile
+

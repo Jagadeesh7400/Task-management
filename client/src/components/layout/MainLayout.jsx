@@ -1,39 +1,42 @@
+"use client"
+
 import { useState, useEffect } from "react"
-import { Outlet } from "react-router-dom"
+import { Outlet, useLocation } from "react-router-dom"
 import Sidebar from "./Sidebar"
 import Navbar from "./Navbar"
-import { useAuth } from "../../hooks/useAuth"
-import LoadingScreen from "../ui/LoadingScreen"
+import "../../styles/layout.css"
 
-export default function MainLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { isLoading } = useAuth()
+const MainLayout = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(true)
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+  const location = useLocation()
+  const isAdmin = location.pathname.includes("/admin")
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768)
+      const mobile = window.innerWidth < 768
+      setIsMobile(mobile)
+      if (mobile) setSidebarOpen(false)
     }
 
     window.addEventListener("resize", handleResize)
     return () => window.removeEventListener("resize", handleResize)
   }, [])
 
-  if (isLoading) {
-    return <LoadingScreen />
-  }
-
   return (
     <div className="app-container">
-      <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} isMobile={isMobile} />
-      <div className="main-content">
-        <Navbar onMenuButtonClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 animate-slide-up">
-          <div className="max-w-7xl mx-auto">
-            <Outlet />
-          </div>
-        </main>
+      <Sidebar isOpen={sidebarOpen} toggleSidebar={() => setSidebarOpen(!sidebarOpen)} isAdmin={isAdmin} />
+
+      <div className={`main-content ${sidebarOpen ? "sidebar-open" : ""}`}>
+        <Navbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} isAdmin={isAdmin} />
+
+        <div className="page-container">
+          <Outlet />
+        </div>
       </div>
     </div>
   )
 }
+
+export default MainLayout
+

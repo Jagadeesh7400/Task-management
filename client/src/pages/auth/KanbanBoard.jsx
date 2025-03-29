@@ -5,6 +5,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 import { Plus, Filter, Search, Clock } from "lucide-react"
 import { useTasks } from "../hooks/useTasks"
 import AddTaskModal from "../components/tasks/AddTaskModal"
+import "../../styles/auth.css"
 
 export default function KanbanBoard() {
   const { tasks, isLoading, fetchTasks, updateTask } = useTasks()

@@ -4,14 +4,15 @@ import { useState } from "react"
 import { List, LayoutGrid } from "lucide-react"
 import TaskBoard from "../components/tasks/TaskBoard"
 import Dashboard from "./Dashboard" // Reuse the existing Dashboard for list view
+import "../../styles/tasks.css"
 
 export default function TasksPage() {
   const [viewMode, setViewMode] = useState("board") // board, list
 
   return (
-    <div className="tasks-page-container animate-fade-in">
-      <div className="tasks-header">
-        <div className="glass rounded-lg p-1 flex">
+    <div className="animate-fade-in">
+      <div className="flex justify-end mb-4">
+        <div className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg p-1 flex">
           <button
             onClick={() => setViewMode("list")}
             className={`p-2 rounded-md ${
@@ -37,7 +38,8 @@ export default function TasksPage() {
         </div>
       </div>
 
-      {viewMode === "board" ? <TaskBoard className="task-board" /> : <Dashboard className="dashboard" />}
+      {viewMode === "board" ? <TaskBoard /> : <Dashboard />}
     </div>
   )
 }
+

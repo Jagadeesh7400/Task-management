@@ -1,18 +1,27 @@
-/**
- * ZidioLogo component
- * 
- * @param {string} className - Optional class name for the SVG element
- * @returns {JSX.Element} The ZidioLogo SVG component
- */
+"use client"
 
-import logo from "../../assets/logo.png";
+import React from "react";
+import ViteLogo from "../../assets/logo.png"; 
 
-export default function ZidioLogo({ className = "h-6 w-6" }) {
+const ZidioLogo = ({ size = 48 }) => {
   return (
-    <img
-      src={logo}
-      className={`${className} object-contain h-6 w-6`}
-      alt="Zidio Logo"
-    />
-  );
+    <div className="zidio-logo" style={{ width: size, height: size }}>
+      <img src={ViteLogo} alt="Zidio Logo" width={size} height={size} />
+
+      <style jsx>{`
+        .zidio-logo {
+          display: inline-block;
+          position: relative;
+          transform-style: preserve-3d;
+          transition: transform 0.3s ease;
+        }
+        
+        .zidio-logo:hover {
+          transform: scale(1.05) rotateY(10deg);
+        }
+      `}</style>
+    </div>
+  )
 }
+
+export default ZidioLogo

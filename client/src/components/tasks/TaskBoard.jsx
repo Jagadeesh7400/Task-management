@@ -1,58 +1,111 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useTasks } from "../../hooks/useTasks"
-import { Plus, Search } from "lucide-react"
+import { Plus, Filter, List, LayoutGrid } from "lucide-react"
 import TaskCard from "./TaskCard"
 import AddTaskModal from "./AddTaskModal"
+import ErrorBoundary from "../ErrorBoundary"
+import "../../styles/tasks.css"
 
-export default function TaskBoard() {
-  const { tasks, isLoading, fetchTasks } = useTasks()
-  const [showAddTaskModal, setShowAddTaskModal] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [filteredTasks, setFilteredTasks] = useState({
-    pending: [],
-    inProgress: [],
-    completed: [],
-    delivered: [],
-  })
+const TaskBoard = () => {
+  const [tasks, setTasks] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [viewMode, setViewMode] = useState("board") // 'board' or 'list'
+  const [filter, setFilter] = useState("all")
+
+  // Mock data for demonstration
+  const mockTasks = [
+    {
+      id: "1",
+      title: "Implement user authentication",
+      description: "Add user authentication functionality to the website.",
+      status: "completed",
+      priority: "high",
+      startDate: "2024-04-01",
+      endDate: "2024-05-20",
+      assignee: "John Doe",
+    },
+    {
+      id: "2",
+      title: "Update website content",
+      description: "Update the About Us page with new team members.",
+      status: "pending",
+      priority: "medium",
+      startDate: "2024-04-15",
+      endDate: "2024-04-30",
+      assignee: "Jane Smith",
+    },
+    {
+      id: "3",
+      title: "Design new logo",
+      description: "Create a new logo for the company rebranding.",
+      status: "in-progress",
+      priority: "high",
+      startDate: "2024-04-10",
+      endDate: "2024-05-10",
+      assignee: "Mike Johnson",
+    },
+    {
+      id: "4",
+      title: "Deploy marketing campaign",
+      description: "Launch the new marketing campaign on social media.",
+      status: "pending",
+      priority: "medium",
+      startDate: "2024-04-20",
+      endDate: "2024-05-05",
+      assignee: "Sarah Williams",
+    },
+    {
+      id: "5",
+      title: "Review project timelines",
+      description: "Review and adjust project timelines based on new requirements.",
+      status: "pending",
+      priority: "low",
+      startDate: "2024-04-25",
+      endDate: "2024-05-01",
+      assignee: "David Brown",
+    },
+    {
+      id: "6",
+      title: "Drop Database",
+      description: "Drop Mongo Db Database",
+      status: "pending",
+      priority: "critical",
+      startDate: "2024-04-28",
+      endDate: "2024-05-05",
+      assignee: "Alex Chen",
+    },
+  ]
 
   useEffect(() => {
-    fetchTasks()
-  }, [fetchTasks])
+    // Simulate API call
+    setTimeout(() => {
+      setTasks(mockTasks)
+      setIsLoading(false)
+    }, 1000)
+  }, [])
 
-  useEffect(() => {
-    if (tasks) {
-      // Filter and group tasks
-      const filtered = {
-        pending: tasks.filter(
-          (task) =>
-            task.status === "pending" &&
-            (searchQuery === "" || task.title.toLowerCase().includes(searchQuery.toLowerCase())),
-        ),
-        inProgress: tasks.filter(
-          (task) =>
-            task.status === "in-progress" &&
-            (searchQuery === "" || task.title.toLowerCase().includes(searchQuery.toLowerCase())),
-        ),
-        completed: tasks.filter(
-          (task) =>
-            task.status === "completed" &&
-            (searchQuery === "" || task.title.toLowerCase().includes(searchQuery.toLowerCase())),
-        ),
-        delivered: tasks.filter(
-          (task) =>
-            task.status === "delivered" &&
-            (searchQuery === "" || task.title.toLowerCase().includes(searchQuery.toLowerCase())),
-        ),
-      }
-      setFilteredTasks(filtered)
+  const handleAddTask = (newTask) => {
+    setTasks([...tasks, { ...newTask, id: Date.now().toString() }])
+  }
+
+  const handleStatusChange = (taskId, newStatus) => {
+    setTasks(tasks.map((task) => (task.id === taskId ? { ...task, status: newStatus } : task)))
+  }
+
+  const getFilteredTasks = () => {
+    if (filter === "all") return tasks
+    return tasks.filter((task) => task.status === filter)
+  }
+
+  const getTasksByStatus = () => {
+    return {
+      pending: tasks.filter((task) => task.status === "pending"),
+      "in-progress": tasks.filter((task) => task.status === "in-progress"),
+      completed: tasks.filter((task) => task.status === "completed"),
+      deferred: tasks.filter((task) => task.status === "deferred"),
     }
-  }, [tasks, searchQuery])
-
-  const handleSearch = (e) => {
-    e.preventDefault()
-    // Search is already applied in the useEffect
   }
 
   const handleDragStart = (e, taskId) => {
@@ -63,209 +116,204 @@ export default function TaskBoard() {
     e.preventDefault()
   }
 
-  const handleDrop = async (e, status) => {
-    e.preventDefault()
+  const handleDrop = (e, status) => {
     const taskId = e.dataTransfer.getData("taskId")
-
-    // Find the task
-    const task = tasks.find((t) => t.id === taskId)
-    if (task && task.status !== status) {
-      try {
-        // Update task status
-        await updateTaskStatus(taskId, status)
-        // Refresh tasks
-        fetchTasks()
-      } catch (error) {
-        console.error("Error updating task status:", error)
-      }
-    }
+    handleStatusChange(taskId, status)
   }
 
-  const updateTaskStatus = async (taskId, status) => {
-    // In a real app, this would call the API
-    console.log(`Updating task ${taskId} to status: ${status}`)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 500))
+  if (isLoading) {
+    return (
+      <div className="loading-spinner-container">
+        <div className="loading-spinner"></div>
+      </div>
+    )
   }
+
+  const tasksByStatus = getTasksByStatus()
+  const filteredTasks = getFilteredTasks()
 
   return (
-    <div className="task-board animate-fade-in">
+    <div className="task-board-container">
+      <div className="board-header">
+        <h1>Task Board</h1>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-primary-color dark:text-secondary-color">Task Board</h1>
-          <p className="text-dark-color dark:text-light-color opacity-80">Manage and organize your tasks</p>
-        </div>
+        <div className="board-actions">
+          <div className="view-toggle">
+            <button
+              className={`view-toggle-btn ${viewMode === "board" ? "active" : ""}`}
+              onClick={() => setViewMode("board")}
+            >
+              <LayoutGrid size={18} />
+              <span>Board</span>
+            </button>
+            <button
+              className={`view-toggle-btn ${viewMode === "list" ? "active" : ""}`}
+              onClick={() => setViewMode("list")}
+            >
+              <List size={18} />
+              <span>List</span>
+            </button>
+          </div>
 
-        <div className="mt-4 md:mt-0 flex flex-wrap gap-2">
-          <button
-            onClick={() => setShowAddTaskModal(true)}
-            className="flex items-center px-4 py-2 bg-primary-color text-white rounded-lg 
-            hover:bg-secondary-color transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group"
-          >
-            <Plus className="mr-2 h-4 w-4 group-hover:rotate-90 transition-transform" />
-            Add Task
+          <div className="filter-dropdown">
+            <button className="filter-btn">
+              <Filter size={18} />
+              <span>Filter</span>
+            </button>
+            <div className="filter-menu">
+              <button className={`filter-option ${filter === "all" ? "active" : ""}`} onClick={() => setFilter("all")}>
+                All Tasks
+              </button>
+              <button
+                className={`filter-option ${filter === "pending" ? "active" : ""}`}
+                onClick={() => setFilter("pending")}
+              >
+                Pending
+              </button>
+              <button
+                className={`filter-option ${filter === "in-progress" ? "active" : ""}`}
+                onClick={() => setFilter("in-progress")}
+              >
+                In Progress
+              </button>
+              <button
+                className={`filter-option ${filter === "completed" ? "active" : ""}`}
+                onClick={() => setFilter("completed")}
+              >
+                Completed
+              </button>
+            </div>
+          </div>
+
+          <button className="add-task-btn" onClick={() => setShowAddModal(true)}>
+            <Plus size={18} />
+            <span>Add Task</span>
           </button>
-
-          <form onSubmit={handleSearch} className="relative">
-            <input
-              type="text"
-              placeholder="Search tasks..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-3 py-2 pl-10 glass dark:bg-dark-color dark:bg-opacity-50
-                border border-white border-opacity-20 rounded-md 
-                focus:outline-none focus:ring-2 focus:ring-primary-color dark:focus:ring-secondary-color
-                text-dark-color dark:text-light-color transition-all"
-            />
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-dark-color dark:text-light-color opacity-60" />
-          </form>
         </div>
       </div>
 
-      {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-color dark:border-secondary-color"></div>
+      {viewMode === "board" ? (
+        <div className="task-columns">
+          <div className="task-column" onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, "pending")}>
+            <div className="column-header">
+              <h2>Pending</h2>
+              <span className="task-count">{tasksByStatus.pending.length}</span>
+            </div>
+            <div className="task-list">
+              {tasksByStatus.pending.map((task) => (
+                <div
+                  key={task.id}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, task.id)}
+                  className="task-card-wrapper"
+                >
+                  <ErrorBoundary>
+                    <TaskCard task={task} />
+                  </ErrorBoundary>
+                </div>
+              ))}
+              {tasksByStatus.pending.length === 0 && (
+                <div className="empty-column">
+                  <p>No pending tasks</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="task-column" onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, "in-progress")}>
+            <div className="column-header">
+              <h2>In Progress</h2>
+              <span className="task-count">{tasksByStatus["in-progress"].length}</span>
+            </div>
+            <div className="task-list">
+              {tasksByStatus["in-progress"].map((task) => (
+                <div
+                  key={task.id}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, task.id)}
+                  className="task-card-wrapper"
+                >
+                  <ErrorBoundary>
+                    <TaskCard task={task} />
+                  </ErrorBoundary>
+                </div>
+              ))}
+              {tasksByStatus["in-progress"].length === 0 && (
+                <div className="empty-column">
+                  <p>No tasks in progress</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="task-column" onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, "completed")}>
+            <div className="column-header">
+              <h2>Completed</h2>
+              <span className="task-count">{tasksByStatus.completed.length}</span>
+            </div>
+            <div className="task-list">
+              {tasksByStatus.completed.map((task) => (
+                <div
+                  key={task.id}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, task.id)}
+                  className="task-card-wrapper"
+                >
+                  <ErrorBoundary>
+                    <TaskCard task={task} />
+                  </ErrorBoundary>
+                </div>
+              ))}
+              {tasksByStatus.completed.length === 0 && (
+                <div className="empty-column">
+                  <p>No completed tasks</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 overflow-x-auto">
-          {/* Pending Column */}
-          <div
-            className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-4 min-h-[500px] flex flex-col"
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, "pending")}
-          >
-            <div className="column-header flex items-center justify-between mb-4">
-              <h3 className="column-title font-semibold text-dark-color dark:text-light-color">Pending</h3>
-
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-warning-color bg-opacity-20 text-warning-color text-xs">
-                {filteredTasks.pending.length}
-              </div>
-            </div>
-            <div className="flex-1 space-y-3 overflow-y-auto">
-              {filteredTasks.pending.map((task) => (
-                <div
-                  key={task.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, task.id)}
-                  className="cursor-grab active:cursor-grabbing"
-                >
-                  <TaskCard task={task} onTaskComplete={() => {}} />
-                </div>
+        <div className="task-table-container">
+          <table className="task-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Assignee</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredTasks.map((task) => (
+                <tr key={task.id}>
+                  <td>{task.title}</td>
+                  <td>
+                    <span className={`status-badge status-${task.status}`}>{task.status.replace("-", " ")}</span>
+                  </td>
+                  <td>
+                    <span className={`priority-badge priority-${task.priority}`}>{task.priority}</span>
+                  </td>
+                  <td>{task.startDate}</td>
+                  <td>{task.endDate}</td>
+                  <td>{task.assignee}</td>
+                  <td className="task-actions">
+                    <button className="action-btn edit">Edit</button>
+                    <button className="action-btn delete">Delete</button>
+                  </td>
+                </tr>
               ))}
-              {filteredTasks.pending.length === 0 && (
-                <div className="flex flex-col items-center justify-center h-32 text-dark-color dark:text-light-color opacity-50">
-                  <p className="text-sm">No pending tasks</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* In Progress Column */}
-          <div
-            className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-4 min-h-[500px] flex flex-col"
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, "in-progress")}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-dark-color dark:text-light-color">In Progress</h3>
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-info-color bg-opacity-20 text-info-color text-xs">
-                {filteredTasks.inProgress.length}
-              </div>
-            </div>
-            <div className="flex-1 space-y-3 overflow-y-auto">
-              {filteredTasks.inProgress.map((task) => (
-                <div
-                  key={task.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, task.id)}
-                  className="cursor-grab active:cursor-grabbing"
-                >
-                  <TaskCard task={task} onTaskComplete={() => {}} />
-                </div>
-              ))}
-              {filteredTasks.inProgress.length === 0 && (
-                <div className="flex flex-col items-center justify-center h-32 text-dark-color dark:text-light-color opacity-50">
-                  <p className="text-sm">No tasks in progress</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Completed Column */}
-          <div
-            className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-4 min-h-[500px] flex flex-col"
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, "completed")}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-dark-color dark:text-light-color">Completed</h3>
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-success-color bg-opacity-20 text-success-color text-xs">
-                {filteredTasks.completed.length}
-              </div>
-            </div>
-            <div className="flex-1 space-y-3 overflow-y-auto">
-              {filteredTasks.completed.map((task) => (
-                <div
-                  key={task.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, task.id)}
-                  className="cursor-grab active:cursor-grabbing"
-                >
-                  <TaskCard task={task} onTaskComplete={() => {}} />
-                </div>
-              ))}
-              {filteredTasks.completed.length === 0 && (
-                <div className="flex flex-col items-center justify-center h-32 text-dark-color dark:text-light-color opacity-50">
-                  <p className="text-sm">No completed tasks</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Delivered Column */}
-          <div
-            className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-4 min-h-[500px] flex flex-col"
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, "delivered")}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-dark-color dark:text-light-color">Delivered</h3>
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary-color bg-opacity-20 text-primary-color text-xs">
-                {filteredTasks.delivered.length}
-              </div>
-            </div>
-            <div className="flex-1 space-y-3 overflow-y-auto">
-              {filteredTasks.delivered.map((task) => (
-                <div
-                  key={task.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, task.id)}
-                  className="cursor-grab active:cursor-grabbing"
-                >
-                  <TaskCard task={task} onTaskComplete={() => {}} />
-                </div>
-              ))}
-              {filteredTasks.delivered.length === 0 && (
-                <div className="flex flex-col items-center justify-center h-32 text-dark-color dark:text-light-color opacity-50">
-                  <p className="text-sm">No delivered tasks</p>
-                </div>
-              )}
-            </div>
-          </div>
+            </tbody>
+          </table>
         </div>
       )}
 
-      {showAddTaskModal && (
-        <AddTaskModal
-          isOpen={showAddTaskModal}
-          onClose={() => setShowAddTaskModal(false)}
-          onTaskAdded={() => {
-            setShowAddTaskModal(false)
-            fetchTasks()
-          }}
-        />
-      )}
+      {showAddModal && <AddTaskModal onClose={() => setShowAddModal(false)} onAddTask={handleAddTask} />}
     </div>
   )
 }
+
+export default TaskBoard
+

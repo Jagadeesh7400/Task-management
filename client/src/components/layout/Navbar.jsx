@@ -1,115 +1,117 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import { Bell, Menu, Search, X } from 'lucide-react'
-import { useAuth } from "../../hooks/useAuth"
-import NotificationPanel from "../notifications/NotificationPanel"
+import { useState } from "react"
+import { Menu, Search, Bell, User, X, Clock, CheckSquare } from "lucide-react"
+import "../../styles/layout.css"
 
-export default function Navbar({ onMenuButtonClick }) {
-  const { user } = useAuth()
+const Navbar = ({ toggleSidebar, isAdmin }) => {
   const [searchQuery, setSearchQuery] = useState("")
   const [showSearch, setShowSearch] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
-  const searchInputRef = useRef(null)
-  const notificationRef = useRef(null)
-
-  useEffect(() => {
-    if (showSearch && searchInputRef.current) {
-      searchInputRef.current.focus()
-    }
-  }, [showSearch])
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
-        setShowNotifications(false)
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
 
   const handleSearch = (e) => {
     e.preventDefault()
-    // Implement search functionality
     console.log("Searching for:", searchQuery)
+    // Implement search functionality
   }
 
   return (
     <header className="navbar">
-      <div className="navbar-content flex items-center justify-between h-16 px-4 md:px-6">
-        <div className="flex items-center">
-          <button 
-            onClick={onMenuButtonClick} 
-            className="p-2 rounded-md text-primary-color dark:text-secondary-color 
-              hover:bg-white hover:bg-opacity-20 transition-colors md:hidden"
-          >
-            <Menu size={24} />
+      <div className="navbar-left">
+        <button className="menu-button" onClick={toggleSidebar}>
+          <Menu size={24} />
+        </button>
+
+        <h1 className="page-title">{isAdmin ? "Admin Dashboard" : "Task Manager"}</h1>
+      </div>
+
+      <div className="navbar-right">
+        {showSearch ? (
+          <form onSubmit={handleSearch} className="search-form">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search tasks..."
+              className="search-input"
+            />
+            <button type="submit" className="search-button">
+              <Search size={20} />
+            </button>
+            <button type="button" className="search-close" onClick={() => setShowSearch(false)}>
+              <X size={20} />
+            </button>
+          </form>
+        ) : (
+          <button className="icon-button" onClick={() => setShowSearch(true)}>
+            <Search size={20} />
+          </button>
+        )}
+
+        <div className="notification-container">
+          <button className="icon-button" onClick={() => setShowNotifications(!showNotifications)}>
+            <Bell size={20} />
+            <span className="notification-badge">3</span>
           </button>
 
-          {!showSearch && (
-            <h1 className="navbar-title ml-2 text-xl font-semibold text-primary-color dark:text-secondary-color hidden md:block">
-              Zidio Task Management
-            </h1>
+          {showNotifications && (
+            <div className="notification-dropdown">
+              <div className="notification-header">
+                <h3>Notifications</h3>
+                <button>Mark all as read</button>
+              </div>
+
+              <div className="notification-list">
+                <div className="notification-item unread">
+                  <div className="notification-icon task-added">
+                    <Bell size={16} />
+                  </div>
+                  <div className="notification-content">
+                    <p>New task assigned: "Update website content"</p>
+                    <span>30 minutes ago</span>
+                  </div>
+                </div>
+
+                <div className="notification-item unread">
+                  <div className="notification-icon deadline">
+                    <Clock size={16} />
+                  </div>
+                  <div className="notification-content">
+                    <p>Task deadline approaching: "Design new logo"</p>
+                    <span>1 hour ago</span>
+                  </div>
+                </div>
+
+                <div className="notification-item">
+                  <div className="notification-icon completed">
+                    <CheckSquare size={16} />
+                  </div>
+                  <div className="notification-content">
+                    <p>Task completed: "Implement user authentication"</p>
+                    <span>Yesterday</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="notification-footer">
+                <button>View all notifications</button>
+              </div>
+            </div>
           )}
         </div>
 
-        <div className="flex items-center space-x-4">
-          {showSearch ? (
-            <form onSubmit={handleSearch} className="relative w-full md:w-64 animate-slide-up">
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="Search tasks..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full py-2 pl-10 pr-4 text-sm glass
-                  border border-white border-opacity-20 rounded-lg 
-                  focus:outline-none focus:ring-2 focus:ring-primary-color dark:focus:ring-secondary-color
-                  placeholder-gray-500 dark:placeholder-gray-400"
-              />
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-primary-color dark:text-secondary-color" />
-              <button type="button" onClick={() => setShowSearch(false)} className="absolute right-3 top-2.5">
-                <X className="h-4 w-4 text-primary-color dark:text-secondary-color" />
-              </button>
-            </form>
-          ) : (
-            <button
-              onClick={() => setShowSearch(true)}
-              className="p-2 rounded-md text-primary-color dark:text-secondary-color 
-                hover:bg-white hover:bg-opacity-20 transition-colors"
-            >
-              <Search size={20} />
-            </button>
-          )}
-
-          <div className="notification-container relative" ref={notificationRef}>
-            <button
-              onClick={() => setShowNotifications(!showNotifications)}
-              className="relative p-2 rounded-md text-primary-color dark:text-secondary-color 
-                hover:bg-white hover:bg-opacity-20 transition-colors"
-            >
-              <Bell size={20} />
-              <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-danger-color animate-pulse"></span>
-            </button>
-
-            {showNotifications && <NotificationPanel />}
-          </div>
-
-          <div className="user-info flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-full bg-primary-color flex items-center justify-center text-white
-              hover:bg-secondary-color transition-colors cursor-pointer">
-              {user?.name?.charAt(0) || "U"}
+        <div className="user-menu">
+          <button className="user-button">
+            <div className="avatar">
+              <User size={20} />
             </div>
-            <span className="hidden md:block text-sm font-medium text-dark-color dark:text-light-color">
-              {user?.name || "User"}
-            </span>
-          </div>
+            <span className="username">John Doe</span>
+          </button>
         </div>
       </div>
     </header>
   )
 }
+
+export default Navbar
+

@@ -1,22 +1,80 @@
-import ZidioLogo from "./ZidioLogo"
+import { Calendar, Clock, Edit, Trash, Flag } from "lucide-react"
 
-export default function LoadingScreen() {
+const TaskCard = ({ task }) => {
+  // Early return with error message if task is undefined
+  if (!task) {
+    return (
+      <div className="task-card error">
+        <p>Error: Task data is missing</p>
+      </div>
+    )
+  }
+
+  const getStatusClass = () => {
+    return `status-${task.status || "pending"}`
+  }
+
+  const getPriorityClass = () => {
+    return `priority-${task.priority || "medium"}`
+  }
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "No date"
+
+    try {
+      const options = { month: "short", day: "numeric" }
+      return new Date(dateString).toLocaleDateString(undefined, options)
+    } catch (error) {
+      console.error("Date formatting error:", error)
+      return "Invalid date"
+    }
+  }
+
   return (
-    <div className="loading-screen fixed inset-0 flex items-center justify-center bg-gradient-to-br from-caf0f8 to-0077b6 dark:from-023e8a dark:to-03045e">
-      <div className="loading-content flex flex-col items-center">
-        <ZidioLogo className="h-16 w-16 animate-pulse" />
-        <h1 className="loading-title mt-4 text-2xl font-bold text-0077b6 dark:text-48cae4">Zidio Task Management</h1>
-          <div className="loading-indicators mt-4 flex space-x-2">
-
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className="w-3 h-3 rounded-full bg-0077b6 dark:bg-48cae4 animate-bounce"
-              style={{ animationDelay: `${i * 0.15}s` }}
-            />
-          ))}
+    <div className={`task-card card-3d ${getStatusClass()} ${getPriorityClass()}`}>
+      <div className="task-header">
+        <h3 className="task-title">{task.title || "Untitled Task"}</h3>
+        <div className="task-actions">
+          <button className="task-action-btn">
+            <Edit size={16} />
+          </button>
+          <button className="task-action-btn">
+            <Trash size={16} />
+          </button>
         </div>
+      </div>
+
+      <p className="task-description">{task.description || "No description provided"}</p>
+
+      <div className="task-meta">
+        <div className="task-dates">
+          <div className="task-date">
+            <Calendar size={14} />
+            <span>{formatDate(task.startDate)}</span>
+          </div>
+          <div className="task-date">
+            <Clock size={14} />
+            <span>{formatDate(task.endDate)}</span>
+          </div>
+        </div>
+
+        <div className="task-priority">
+          <Flag size={14} />
+          <span>{task.priority || "medium"}</span>
+        </div>
+      </div>
+
+      <div className="task-footer">
+        <div className="task-assignee">
+          <div className="assignee-avatar">{task.assignee ? task.assignee.charAt(0) : "?"}</div>
+          <span>{task.assignee || "Unassigned"}</span>
+        </div>
+
+        <div className={`task-status-badge ${getStatusClass()}`}>{(task.status || "pending").replace("-", " ")}</div>
       </div>
     </div>
   )
 }
+
+export default TaskCard
+

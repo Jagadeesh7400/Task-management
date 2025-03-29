@@ -1,181 +1,114 @@
 "use client"
 
 import { useState } from "react"
-import { X } from 'lucide-react'
-import { useTasks } from "../../hooks/useTasks"
+import { X } from "lucide-react"
+import "../../styles/tasks.css"
 
-export default function AddTaskModal({ isOpen, onClose, onTaskAdded }) {
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
-  const [date, setDate] = useState("")
-  const [time, setTime] = useState("")
-  const [priority, setPriority] = useState("low") // Default priority
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
+const AddTaskModal = ({ onClose, onAddTask }) => {
+  const [task, setTask] = useState({
+    title: "",
+    description: "",
+    status: "pending",
+    priority: "medium",
+    startDate: "",
+    endDate: "",
+    assignee: "",
+  })
 
-  const { addTask } = useTasks()
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError("")
-
-    if (!title || !date || !time) {
-      setError("Please fill in all required fields")
-      return
-    }
-
-    const deadline = new Date(`${date}T${time}`)
-
-    if (isNaN(deadline.getTime())) {
-      setError("Invalid date or time")
-      return
-    }
-
-    setIsLoading(true)
-
-    try {
-      await addTask({
-        title,
-        description,
-        deadline: deadline.toISOString(),
-        priority, // Include priority in task creation
-        // status: "pending", // Removed duplicate status key
-      })
-
-      onTaskAdded()
-    } catch (err) {
-      setError(err.message || "Failed to add task. Please try again.")
-    } finally {
-      setIsLoading(false)
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setTask((prev) => ({ ...prev, [name]: value }))
   }
 
-  if (!isOpen) return null
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (typeof onAddTask === "function") {
+      onAddTask(task)
+    } else {
+      console.error("onAddTask is not a function or is undefined")
+    }
+    onClose()
+  }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 animate-fade-in task-form">
-      <div className="glass dark:bg-dark-color dark:bg-opacity-90 rounded-lg shadow-xl w-full max-w-md animate-slide-up">
-        <div className="flex justify-between items-center p-4 border-b border-white border-opacity-20">
-          <h2 className="text-lg font-semibold text-primary-color dark:text-secondary-color">Add New Task</h2>
-          <button
-            onClick={onClose}
-            className="text-dark-color dark:text-light-color opacity-60 hover:opacity-100 hover:text-danger-color transition-colors"
-          >
+    <div className="modal-overlay">
+      <div className="modal-container card-3d">
+        <div className="modal-header">
+          <h2>Add New Task</h2>
+          <button className="modal-close" onClick={onClose}>
             <X size={20} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4 task-form">
-          {error && <div className="mb-4 p-3 bg-danger-color bg-opacity-10 border border-danger-color border-opacity-20 text-danger-color rounded animate-shake">{error}</div>}
-
-          <div className="mb-4 group">
-            <label htmlFor="title" className="block text-sm font-medium text-dark-color dark:text-light-color mb-1 group-hover:text-primary-color dark:group-hover:text-secondary-color transition-colors">
-              Title *
-            </label>
-            <input
-              id="title"
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 glass dark:bg-dark-color dark:bg-opacity-50
-              border border-white border-opacity-20 rounded-md 
-              focus:outline-none focus:ring-2 focus:ring-primary-color dark:focus:ring-secondary-color
-              text-dark-color dark:text-light-color transition-all"
-              placeholder="Task title"
-              required
-            />
+        <form onSubmit={handleSubmit} className="modal-form">
+          <div className="form-group">
+            <label htmlFor="title">Title</label>
+            <input type="text" id="title" name="title" value={task.title} onChange={handleChange} required />
           </div>
 
-          <div className="mb-4 group">
-            <label htmlFor="description" className="block text-sm font-medium text-dark-color dark:text-light-color mb-1 group-hover:text-primary-color dark:group-hover:text-secondary-color transition-colors">
-              Description
-            </label>
+          <div className="form-group">
+            <label htmlFor="description">Description</label>
             <textarea
               id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={3}
-              className="w-full px-3 py-2 glass dark:bg-dark-color dark:bg-opacity-50
-              border border-white border-opacity-20 rounded-md 
-              focus:outline-none focus:ring-2 focus:ring-primary-color dark:focus:ring-secondary-color
-              text-dark-color dark:text-light-color transition-all"
-              placeholder="Task description"
-            />
+              name="description"
+              value={task.description}
+              onChange={handleChange}
+              rows="3"
+            ></textarea>
           </div>
 
-          <div className="mb-4 group">
-            <label htmlFor="priority" className="block text-sm font-medium text-dark-color dark:text-light-color mb-1 group-hover:text-primary-color dark:group-hover:text-secondary-color transition-colors">
-              Priority
-            </label>
-            <select
-              id="priority"
-              value={priority}
-              onChange={(e) => setPriority(e.target.value)}
-              className="w-full px-3 py-2 glass dark:bg-dark-color dark:bg-opacity-50
-                border border-white border-opacity-20 rounded-md 
-                focus:outline-none focus:ring-2 focus:ring-primary-color dark:focus:ring-secondary-color
-                text-dark-color dark:text-light-color transition-all"
-            >
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </select>
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="status">Status</label>
+              <select id="status" name="status" value={task.status} onChange={handleChange}>
+                <option value="pending">Pending</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="deferred">Deferred</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="priority">Priority</label>
+              <select id="priority" name="priority" value={task.priority} onChange={handleChange}>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="critical">Critical</option>
+              </select>
+            </div>
           </div>
 
-          <div className="form-row grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div className="group">
-              <label htmlFor="date" className="block text-sm font-medium text-dark-color dark:text-light-color mb-1 group-hover:text-primary-color dark:group-hover:text-secondary-color transition-colors">
-                Date *
-              </label>
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="startDate">Start Date</label>
               <input
-                id="date"
                 type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="w-full px-3 py-2 glass dark:bg-dark-color dark:bg-opacity-50
-                border border-white border-opacity-20 rounded-md 
-                focus:outline-none focus:ring-2 focus:ring-primary-color dark:focus:ring-secondary-color
-                text-dark-color dark:text-light-color transition-all"
+                id="startDate"
+                name="startDate"
+                value={task.startDate}
+                onChange={handleChange}
                 required
               />
             </div>
 
-            <div className="group">
-              <label htmlFor="time" className="block text-sm font-medium text-dark-color dark:text-light-color mb-1 group-hover:text-primary-color dark:group-hover:text-secondary-color transition-colors">
-                Time *
-              </label>
-              <input
-                id="time"
-                type="time"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                className="w-full px-3 py-2 glass dark:bg-dark-color dark:bg-opacity-50
-                border border-white border-opacity-20 rounded-md 
-                focus:outline-none focus:ring-2 focus:ring-primary-color dark:focus:ring-secondary-color
-                text-dark-color dark:text-light-color transition-all"
-                required
-              />
+            <div className="form-group">
+              <label htmlFor="endDate">End Date</label>
+              <input type="date" id="endDate" name="endDate" value={task.endDate} onChange={handleChange} required />
             </div>
           </div>
 
-          <div className="flex justify-end space-x-3 mt-6">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 glass border border-white border-opacity-20 rounded-md task-action-btn
-              text-dark-color dark:text-light-color hover:bg-white hover:bg-opacity-10 transition-all"
-            >
+          <div className="form-group">
+            <label htmlFor="assignee">Assignee</label>
+            <input type="text" id="assignee" name="assignee" value={task.assignee} onChange={handleChange} required />
+          </div>
+
+          <div className="form-actions">
+            <button type="button" className="btn-secondary" onClick={onClose}>
               Cancel
             </button>
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="px-4 py-2 bg-primary-color text-white rounded-md hover:bg-secondary-color
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-color
-              disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:-translate-y-1"
-            >
-              {isLoading ? "Adding..." : "Add Task"}
+            <button type="submit" className="btn-primary">
+              Add Task
             </button>
           </div>
         </form>
@@ -183,3 +116,6 @@ export default function AddTaskModal({ isOpen, onClose, onTaskAdded }) {
     </div>
   )
 }
+
+export default AddTaskModal
+

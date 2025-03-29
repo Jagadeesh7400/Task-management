@@ -12,24 +12,55 @@ export const AuthProvider = ({ children }) => {
   // Check if user is logged in on initial load
   useEffect(() => {
     const checkAuth = async () => {
+      const isApiAvailable = await checkApiAvailability();
+      if (!isApiAvailable) {
+        // Use stored user data if API is unavailable
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+        setIsLoading(false);
+        return;
+      }
       try {
         const token = localStorage.getItem("token")
 
         if (token) {
-          // In a real app, this would validate the token with the backend
           try {
-            const response = await api.get("/auth/validate-token")
-            setUser(response.data.user)
+            // First try to get the user from localStorage as a fallback
+            const storedUser = localStorage.getItem("user")
+            if (storedUser) {
+              setUser(JSON.parse(storedUser))
+            }
+
+            // Then validate with the backend
+            const response = await api.get("/auth/validate-token");
+            if (response.data && response.data.user) {
+              setUser(response.data.user)
+            }
           } catch (error) {
-            // Token is invalid or expired
-            localStorage.removeItem("token")
-            localStorage.removeItem("user")
+            console.warn("Token validation failed:", error.message)
+            // If it's a 404 error, the endpoint might not exist yet
+            if (error.response && error.response.status === 404) {
+              console.info("Token validation endpoint not found. Using stored user data instead.")
+              // Keep the user logged in if we have local data
+              const storedUser = localStorage.getItem("user")
+              if (!storedUser) {
+                localStorage.removeItem("token")
+              }
+            } else {
+              // For other errors, clear the auth data
+              localStorage.removeItem("token")
+              localStorage.removeItem("user")
+              setUser(null)
+            }
           }
         }
       } catch (error) {
         console.error("Authentication error:", error)
         localStorage.removeItem("token")
         localStorage.removeItem("user")
+        setUser(null)
       } finally {
         setIsLoading(false)
       }
@@ -155,4 +186,3 @@ export const useAuth = () => {
 
   return context
 }
-

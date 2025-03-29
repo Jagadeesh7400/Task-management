@@ -39,6 +39,13 @@ export const TasksProvider = ({ children }) => {
   const { user } = useAuth()
 
   const fetchTasks = useCallback(async () => {
+    const isApiAvailable = await checkApiAvailability();
+    if (!isApiAvailable) {
+      // Use mock tasks if API is unavailable
+      setTasks(mockTasks.filter((task) => task.userId === user.id));
+      setIsLoading(false);
+      return;
+    }
     if (!user) return
 
     setIsLoading(true)
@@ -145,4 +152,3 @@ export const useTasks = () => {
 
   return context
 }
-

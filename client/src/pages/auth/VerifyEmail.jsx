@@ -5,6 +5,7 @@ import { useParams, useNavigate, Link } from "react-router-dom"
 import { CheckCircle, XCircle, ArrowLeft } from "lucide-react"
 import ZidioLogo from "../../components/ui/ZidioLogo"
 import { useAuth } from "../../hooks/useAuth"
+import "../../styles/auth.css"
 
 export default function VerifyEmail() {
   const { token } = useParams()
@@ -36,7 +37,7 @@ export default function VerifyEmail() {
   }, [token, verifyEmail])
 
   return (
-    <div className="verify-email-container min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-color to-secondary-color dark:from-dark-color dark:to-primary-color p-4 animate-fade-in">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-color to-secondary-color dark:from-dark-color dark:to-primary-color p-4 animate-fade-in">
       <div className="w-full max-w-md animate-slide-up">
         <div className="glass dark:bg-dark-color dark:bg-opacity-80 rounded-lg shadow-xl overflow-hidden">
           <div className="p-6 sm:p-8">
@@ -44,7 +45,7 @@ export default function VerifyEmail() {
               <ZidioLogo className="h-12 w-12" />
             </div>
 
-            <h2 className="verify-email-title text-2xl font-bold text-center text-primary-color dark:text-secondary-color mb-6">
+            <h2 className="text-2xl font-bold text-center text-primary-color dark:text-secondary-color mb-6">
               Email Verification
             </h2>
 
@@ -95,3 +96,4 @@ export default function VerifyEmail() {
     </div>
   )
 }
+

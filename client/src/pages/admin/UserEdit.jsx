@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { ArrowLeft, Save } from "lucide-react"
 import { useAdmin } from "../../hooks/useAdmin"
+import "../../styles/admin.css"
 
 export default function UserEdit() {
   const { id } = useParams()
@@ -82,26 +83,18 @@ export default function UserEdit() {
   }
 
   return (
-<div className="user-edit-container animate-fade-in">
-
-
-      <div className="user-edit-header flex items-center mb-6">
-
-
+    <div className="animate-fade-in">
+      <div className="flex items-center mb-6">
         <button
           onClick={() => navigate("/admin/users")}
           className="mr-4 p-2 glass rounded-full hover:bg-white hover:bg-opacity-10 transition-colors"
         >
           <ArrowLeft className="h-5 w-5 text-dark-color dark:text-light-color" />
         </button>
-<h1 className="user-edit-title text-2xl font-bold text-primary-color dark:text-secondary-color">Edit User</h1>
-
-
+        <h1 className="text-2xl font-bold text-primary-color dark:text-secondary-color">Edit User</h1>
       </div>
 
-      <div className="user-edit-form glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-6 animate-slide-up">
-
-
+      <div className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-6 animate-slide-up">
         {error && (
           <div className="mb-6 p-4 bg-danger-color bg-opacity-10 border border-danger-color border-opacity-20 text-danger-color rounded-lg animate-shake">
             {error}
@@ -242,9 +235,7 @@ export default function UserEdit() {
             </div>
           </div>
 
-<div className="user-edit-actions flex justify-end space-x-3 pt-4">
-
-
+          <div className="flex justify-end space-x-3 pt-4">
             <button
               type="button"
               onClick={() => navigate("/admin/users")}
@@ -298,3 +289,4 @@ export default function UserEdit() {
     </div>
   )
 }
+

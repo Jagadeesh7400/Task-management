@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Edit, Trash, Search, UserPlus, Filter, RefreshCw } from "lucide-react"
 import { useAdmin } from "../../hooks/useAdmin"
 import { Link } from "react-router-dom"
+import "../../styles/admin.css"
 
 export default function UserManagement() {
   const { getUsers, deleteUser } = useAdmin()
@@ -55,16 +56,10 @@ export default function UserManagement() {
   })
 
   return (
-<div className="user-management-container animate-fade-in">
-
-
-<div className="user-management-header flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-
-
+    <div className="animate-fade-in">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
-<h1 className="user-management-title text-2xl font-bold text-primary-color dark:text-secondary-color">User Management</h1>
-
-
+          <h1 className="text-2xl font-bold text-primary-color dark:text-secondary-color">User Management</h1>
           <p className="text-dark-color dark:text-light-color opacity-80">Manage all users in the system</p>
         </div>
 
@@ -78,12 +73,8 @@ export default function UserManagement() {
         </Link>
       </div>
 
-<div className="user-management-table-container glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-4 md:p-6 animate-slide-up">
-
-
-<div className="user-management-actions flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-
-
+      <div className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-4 md:p-6 animate-slide-up">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
           <form onSubmit={handleSearch} className="relative w-full md:w-64">
             <input
               type="text"
@@ -151,12 +142,8 @@ export default function UserManagement() {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-color dark:border-secondary-color"></div>
           </div>
         ) : (
-<div className="user-management-table overflow-x-auto">
-
-
-<table className="user-management-table min-w-full divide-y divide-white divide-opacity-20">
-
-
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-white divide-opacity-20">
               <thead>
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium text-dark-color dark:text-light-color opacity-70 uppercase tracking-wider">
@@ -179,8 +166,7 @@ export default function UserManagement() {
                   </th>
                 </tr>
               </thead>
-<tbody className="user-management-body divide-y divide-white divide-opacity-10">
-
+              <tbody className="divide-y divide-white divide-opacity-10">
                 {filteredUsers.length > 0 ? (
                   filteredUsers.map((user) => (
                     <tr key={user.id} className="hover:bg-white hover:bg-opacity-5 transition-colors">
@@ -279,3 +265,4 @@ export default function UserManagement() {
     </div>
   )
 }
+
