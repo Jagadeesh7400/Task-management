@@ -29,4 +29,13 @@ router.delete("/users/:id", authenticateToken, isAdmin, adminController.deleteUs
 // Get user performance (admin only)
 router.get("/users/:id/performance", authenticateToken, isAdmin, adminController.getUserPerformance);
 
+// Create a new task (admin only)
+router.post("/tasks", authenticateToken, isAdmin, adminController.createTask);
+
+// Update a task (admin only)
+router.put("/tasks/:id", authenticateToken, isAdmin, adminController.updateTask);
+
+// Delete a task (admin only)
+router.delete("/tasks/:id", authenticateToken, isAdmin, adminController.deleteTask);
+
 module.exports = router;

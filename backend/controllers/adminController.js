@@ -358,3 +358,105 @@ exports.getUserPerformance = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+/**
+ * Create a new task (admin only).
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>}
+ */
+exports.createTask = async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    const { title, description, deadline, isImportant, userId } = req.body;
+
+    // Check if user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const task = new Task({
+      title,
+      description,
+      deadline,
+      isImportant: isImportant || false,
+      userId: userId,
+    });
+
+    await task.save();
+
+    res.status(201).json(task);
+  } catch (error) {
+    console.error("Create task error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/**
+ * Update a task (admin only).
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>}
+ */
+exports.updateTask = async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    const { title, description, status, deadline, isImportant } = req.body;
+
+    // Find task and check ownership
+    const task = await Task.findById(req.params.id);
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    // Update fields
+    if (title) task.title = title;
+    if (description !== undefined) task.description = description;
+    if (status) task.status = status;
+    if (deadline) task.deadline = deadline;
+    if (isImportant !== undefined) task.isImportant = isImportant;
+
+    await task.save();
+
+    res.json(task);
+  } catch (error) {
+    console.error("Update task error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/**
+ * Delete a task (admin only).
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>}
+ */
+exports.deleteTask = async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    const task = await Task.findByIdAndDelete(req.params.id);
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.json({ message: "Task deleted successfully" });
+  } catch (error) {
+    console.error("Delete task error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
