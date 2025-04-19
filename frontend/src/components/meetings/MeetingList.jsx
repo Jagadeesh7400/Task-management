@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { api } from "@/services/api";
 import { Calendar, Clock, Users } from "lucide-react";
+import VideoCall from "./JitsiMeeting";
 
 const MeetingList = () => {
   const [meetings, setMeetings] = useState([]);
@@ -73,6 +74,7 @@ const MeetingList = () => {
                 .join(", ")}
             </span>
           </div>
+          <VideoCall roomId={meeting.jitsiRoomId} userName={user?.name || "Guest"} />
         </div>
       ))}
     </div>
@@ -80,4 +82,3 @@ const MeetingList = () => {
 };
 
 export default MeetingList;
-

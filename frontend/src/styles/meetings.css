@@ -1,0 +1,102 @@
+/* Styles for MeetingsPage.jsx */
+.meetings-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .meetings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .meetings-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .meetings-actions button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .meetings-actions button:hover {
+    background-color: #0056b3;
+  }
+  
+  .meetings-list {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .meeting-item {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .meeting-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .meeting-details {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .meeting-participants {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #777;
+  }
+  
+  .jitsi-container {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .jitsi-iframe {
+    width: 100%;
+    height: 500px; /* Adjust as needed */
+    border: none;
+  }
+  
+  /* Custom scrollbar styles */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  
+  

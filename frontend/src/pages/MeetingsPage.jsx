@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import MeetingList from "@/components/meetings/MeetingList";
-import JitsiMeeting from "@/components/meetings/JitsiMeeting";
+import VideoCall from "@/components/meetings/JitsiMeeting";
 import { useAuth } from "@/hooks/useAuth";
+import "@/styles/meetings.css"
 
 const MeetingsPage = () => {
   const [roomId, setRoomId] = useState("testroom");
@@ -15,7 +16,7 @@ const MeetingsPage = () => {
       <MeetingList />
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-2">Join Meeting</h2>
-        <JitsiMeeting roomId={roomId} userName={user?.name || "Guest"} />
+        <VideoCall roomId={"testroom"} userName={user?.name || "Guest"} />
       </div>
     </div>
   );

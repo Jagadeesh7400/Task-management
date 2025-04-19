@@ -67,4 +67,3 @@ cron.schedule('0 0 * * *', async () => {
     console.error('Error cleaning up old audit logs:', error);
   }
 });
-
