@@ -7,13 +7,9 @@ import path from 'path';
 export default defineConfig({
   plugins: [
     react({
-      // Attempt to explicitly configure Babel presets
       babel: {
-        presets: [
-          "@babel/preset-env",
-          "@babel/preset-react",
-        ],
-      },
+        presets: ["@babel/preset-env", "@babel/preset-react"]
+      }
     }),
     tailwindcss()
   ],
