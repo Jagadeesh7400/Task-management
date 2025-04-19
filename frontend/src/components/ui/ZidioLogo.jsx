@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react";
-import ViteLogo from "../../assets/logo.png"; 
+import ViteLogo from "@/assets/logo.png"; 
 
 const ZidioLogo = ({ size = 48 }) => {
   return (

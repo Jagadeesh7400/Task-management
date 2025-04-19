@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Users, CheckSquare, AlertTriangle, BarChart2 } from "lucide-react"
-import "../../styles/admin.css"
+import "@/styles/admin.css"
 import { useAdmin } from "@/hooks/useAdmin"
 
 const AdminDashboard = () => {

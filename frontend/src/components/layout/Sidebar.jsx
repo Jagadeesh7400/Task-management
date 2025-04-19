@@ -14,8 +14,8 @@ import {
   Video,
   UserPlus
 } from "lucide-react"
-import ZidioLogo from "../ui/ZidioLogo"
-import "../../styles/layout.css"
+import ZidioLogo from "@/components/ui/ZidioLogo"
+import "@/styles/layout.css"
 
 const Sidebar = ({ isOpen, toggleSidebar, isAdmin }) => {
   const navigate = useNavigate()
@@ -90,4 +90,3 @@ const Sidebar = ({ isOpen, toggleSidebar, isAdmin }) => {
 
 export default Sidebar
 
-    

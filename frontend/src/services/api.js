@@ -2,7 +2,7 @@ import axios from "axios"
 
 // Create an axios instance
 export const api = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL || "http://localhost:5000/api",
+  baseURL: "http://localhost:5000/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
@@ -56,7 +56,7 @@ api.interceptors.response.use(
 )
 
 // Add a helper function to check if the API is available
-export const checkApiAvailability = async (baseURL = "http://localhost:5000/api") => {
+export const checkApiAvailability = async (baseURL = "http://localhost:5000/api/v1") => {
   try {
     await api.get("/health-check", { timeout: 5000 })
     return true
@@ -65,4 +65,3 @@ export const checkApiAvailability = async (baseURL = "http://localhost:5000/api"
     return false
   }
 }
-

@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { List, LayoutGrid } from "lucide-react"
-import TaskBoard from "../components/tasks/TaskBoard"
-import Dashboard from "./Dashboard"
-import "../../styles/tasks.css"
+import TaskBoard from "@/components/tasks/TaskBoard"
+import Dashboard from "@/pages/Dashboard" // Reuse the existing Dashboard for list view
+import "@/styles/tasks.css"
 import { useTasks } from "@/hooks/useTasks"
 
 export default function TasksPage() {
@@ -44,17 +44,8 @@ export default function TasksPage() {
         </div>
       </div>
 
-      {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-color dark:border-secondary-color"></div>
-        </div>
-      ) : (
-        <>
-          {viewMode === "board" && <TaskBoard />}
-          {viewMode === "list" && <Dashboard />}
-        </>
-      )}
+      {viewMode === "board" && <TaskBoard />}
+      {viewMode === "list" && <Dashboard />}
     </div>
   )
 }
-

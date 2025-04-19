@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { X } from "lucide-react"
 import { useTasks } from "@/hooks/useTasks"
-import "../../styles/tasks.css"
+import "@/styles/tasks.css"
 
 const AddTaskModal = ({ onClose, onAddTask }) => {
   const [task, setTask] = useState({
@@ -106,4 +106,3 @@ const AddTaskModal = ({ onClose, onAddTask }) => {
 }
 
 export default AddTaskModal
-

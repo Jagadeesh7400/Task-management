@@ -1,7 +1,7 @@
 "use client";
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { api } from '../services/api'; // Adjust the path if necessary
+import { api } from '@/services/api'; // Adjust the path if necessary
 
 // Async thunks for team operations
 export const fetchTeams = createAsyncThunk(

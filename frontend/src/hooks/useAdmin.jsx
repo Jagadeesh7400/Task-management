@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { api, checkApiAvailability } from "../services/api"
+import { api, checkApiAvailability } from "@/services/api"
 
 export const useAdmin = () => {
   const [admins, setAdmins] = useState([])

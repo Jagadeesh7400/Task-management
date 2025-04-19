@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { Plus, Filter, List, LayoutGrid } from "lucide-react"
-import TaskCard from "./TaskCard"
-import AddTaskModal from "./AddTaskModal"
-import ErrorBoundary from "../ErrorBoundary"
-import "../../styles/tasks.css"
+import TaskCard from "@/components/tasks/TaskCard"
+import AddTaskModal from "@/components/tasks/AddTaskModal"
+import ErrorBoundary from "@/components/ErrorBoundary"
+import "@/styles/tasks.css"
 import { useTasks } from "@/hooks/useTasks"
 
 const TaskBoard = () => {
@@ -258,4 +258,3 @@ const TaskBoard = () => {
 }
 
 export default TaskBoard
-
