@@ -17,7 +17,7 @@ export default function Register() {
   const [error, setError] = useState("")
 
   const navigate = useNavigate()
-  const { register } = useAuth()
+  const { register, setAuthStatus } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -31,8 +31,12 @@ export default function Register() {
     setIsLoading(true)
 
     try {
-      await register(name, email, password)
-      navigate("/")
+      const registrationResult = await register(name, email, password)
+      if (registrationResult && registrationResult.message) {
+        navigate("/login")
+      } else {
+        setError("Registration failed. Please try again.")
+      }
     } catch (err) {
       setError(err.message || "Failed to register. Please try again.")
     } finally {
@@ -195,4 +199,3 @@ export default function Register() {
     </div>
   )
 }
-

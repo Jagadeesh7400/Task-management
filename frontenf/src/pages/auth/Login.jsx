@@ -1,10 +1,11 @@
-"use client"
+use client"
 
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Eye, EyeOff, LogIn } from "lucide-react"
 import ZidioLogo from "../../components/ui/ZidioLogo"
 import "../../styles/auth.css"
+import { useAuth } from "@/hooks/useAuth"
 
 const Login = () => {
   const [email, setEmail] = useState("")
@@ -15,6 +16,7 @@ const Login = () => {
   const [error, setError] = useState("")
 
   const navigate = useNavigate()
+  const { login, setAuthStatus } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -22,16 +24,8 @@ const Login = () => {
     setError("")
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // In a real app, you would call your auth service here
-      // const response = await authService.login(email, password);
-
-      // For demo purposes, we'll just navigate to dashboard
-      localStorage.setItem("isLoggedIn", "true")
-      localStorage.setItem("userRole", "user") // or 'admin'
-
+      const user = await login(email, password)
+      setAuthStatus(true, user.role)
       navigate("/dashboard")
     } catch (err) {
       setError("Invalid email or password. Please try again.")
@@ -118,4 +112,3 @@ const Login = () => {
 }
 
 export default Login
-

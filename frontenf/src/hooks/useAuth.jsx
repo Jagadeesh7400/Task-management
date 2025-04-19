@@ -5,55 +5,32 @@ import { api } from "../services/api"
 
 const AuthContext = createContext(null)
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children, setAuthStatus }) => {
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Check if user is logged in on initial load
   useEffect(() => {
     const checkAuth = async () => {
-      const isApiAvailable = await checkApiAvailability();
-      if (!isApiAvailable) {
-        // Use stored user data if API is unavailable
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
-        setIsLoading(false);
-        return;
-      }
       try {
         const token = localStorage.getItem("token")
 
         if (token) {
           try {
-            // First try to get the user from localStorage as a fallback
-            const storedUser = localStorage.getItem("user")
-            if (storedUser) {
-              setUser(JSON.parse(storedUser))
-            }
+            const response = await api.get("/auth/validateToken", {
+              headers: { Authorization: `Bearer ${token}` },
+            })
 
-            // Then validate with the backend
-            const response = await api.get("/auth/validate-token");
-            if (response.data && response.data.user) {
-              setUser(response.data.user)
+            if (response.data && response.data.userId) {
+              const userDetailsResponse = await api.get(`/users/${response.data.userId}`)
+              setUser(userDetailsResponse.data)
+              setAuthStatus(true, userDetailsResponse.data.role)
             }
           } catch (error) {
-            console.warn("Token validation failed:", error.message)
-            // If it's a 404 error, the endpoint might not exist yet
-            if (error.response && error.response.status === 404) {
-              console.info("Token validation endpoint not found. Using stored user data instead.")
-              // Keep the user logged in if we have local data
-              const storedUser = localStorage.getItem("user")
-              if (!storedUser) {
-                localStorage.removeItem("token")
-              }
-            } else {
-              // For other errors, clear the auth data
-              localStorage.removeItem("token")
-              localStorage.removeItem("user")
-              setUser(null)
-            }
+            console.error("Token validation failed:", error)
+            localStorage.removeItem("token")
+            localStorage.removeItem("user")
+            setUser(null)
+            setAuthStatus(false, null)
           }
         }
       } catch (error) {
@@ -61,6 +38,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("token")
         localStorage.removeItem("user")
         setUser(null)
+        setAuthStatus(false, null)
       } finally {
         setIsLoading(false)
       }
@@ -82,50 +60,53 @@ export const AuthProvider = ({ children }) => {
   const verifyEmail = useCallback(async (token) => {
     try {
       const response = await api.get(`/auth/verify-email/${token}`)
-
-      // If verification is successful, set the user and token
       localStorage.setItem("token", response.data.token)
       localStorage.setItem("user", JSON.stringify(response.data.user))
       setUser(response.data.user)
+      setAuthStatus(true, response.data.user.role)
 
       return response.data
     } catch (error) {
       console.error("Email verification error:", error)
       throw error.response?.data || { message: "Verification failed" }
     }
-  }, [])
+  }, [setAuthStatus])
 
   const login = useCallback(async (email, password) => {
     try {
       const response = await api.post("/auth/login", { email, password })
 
+      api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`
+
       localStorage.setItem("token", response.data.token)
       localStorage.setItem("user", JSON.stringify(response.data.user))
-      setUser(response.data.user)
 
+      setUser(response.data.user)
+      setAuthStatus(true, response.data.user.role)
       return response.data.user
     } catch (error) {
       console.error("Login error:", error)
       throw error.response?.data || { message: "Login failed" }
     }
-  }, [])
+  }, [setAuthStatus])
 
   const logout = useCallback(async () => {
     try {
-      // In a real app, this would make an API call
       await api.post("/auth/logout")
 
       localStorage.removeItem("token")
       localStorage.removeItem("user")
       setUser(null)
+      setAuthStatus(false, null)
     } catch (error) {
       console.error("Logout error:", error)
-      // Still remove local storage items even if API call fails
+
       localStorage.removeItem("token")
       localStorage.removeItem("user")
       setUser(null)
+      setAuthStatus(false, null)
     }
-  }, [])
+  }, [setAuthStatus])
 
   const forgotPassword = useCallback(async (email) => {
     try {
@@ -172,6 +153,7 @@ export const AuthProvider = ({ children }) => {
     forgotPassword,
     resetPassword,
     updateProfile,
+    setAuthStatus,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

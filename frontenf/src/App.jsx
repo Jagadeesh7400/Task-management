@@ -22,13 +22,16 @@ import TasksPage from "./pages/TasksPage"
 import "./styles/main.css"
 
 const App = () => {
-  // Check if user is logged in
-  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true"
-  const userRole = localStorage.getItem("userRole")
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn") === "true")
+  const [userRole, setUserRole] = useState(localStorage.getItem("userRole"))
   const [apiAvailable, setApiAvailable] = useState(true)
   const [isChecking, setIsChecking] = useState(true)
 
   useEffect(() => {
+    const storedIsLoggedIn = localStorage.getItem("isLoggedIn") === "true"
+    setIsLoggedIn(storedIsLoggedIn)
+    setUserRole(localStorage.getItem("userRole"))
+
     const checkApi = async () => {
       const isAvailable = await checkApiAvailability()
       setApiAvailable(isAvailable)
@@ -38,16 +41,25 @@ const App = () => {
     checkApi()
   }, [])
 
+  const setAuthStatus = (status, role) => {
+    setIsLoggedIn(status)
+    setUserRole(role)
+    localStorage.setItem("isLoggedIn", status.toString())
+    if (role) {
+      localStorage.setItem("userRole", role)
+    } else {
+      localStorage.removeItem("userRole")
+    }
+  }
+
   if (isChecking) {
     return <LoadingScreen />
   }
 
-  // If API is not available, we can still use the app in demo mode
-  // This allows users to test the UI even if the backend is not running
   const demoMode = !apiAvailable
 
   return (
-    <AuthProvider>
+    <AuthProvider setAuthStatus={setAuthStatus}>
       <Router>
         {demoMode && (
           <div className="demo-mode-banner">Backend API not available. Running in demo mode with mock data.</div>
