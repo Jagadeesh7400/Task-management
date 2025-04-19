@@ -13,7 +13,11 @@ const Team = require("../models/Team");
  */
 exports.getTeams = async (req, res) => {
   try {
-    const teams = await Team.find().populate("members", "name email");
+    let query = {};
+    if (req.user.role !== 'admin') {
+      query = { members: req.user.id };
+    }
+    const teams = await Team.find(query).populate("members", "name email");
     res.json(teams);
   } catch (error) {
     console.error("Get teams error:", error);
@@ -29,13 +33,16 @@ exports.getTeams = async (req, res) => {
  */
 exports.getTeam = async (req, res) => {
   try {
-    const team = await Team.findById(req.params.id).populate(
+    const team = await Team.findOne({
+      _id: req.params.id,
+      members: req.user.id // Ensure user is a member
+    }).populate(
       "members",
       "name email"
     );
 
     if (!team) {
-      return res.status(404).json({ message: "Team not found" });
+      return res.status(404).json({ message: "Team not found or unauthorized" });
     }
 
     res.json(team);
@@ -53,6 +60,9 @@ exports.getTeam = async (req, res) => {
  */
 exports.createTeam = async (req, res) => {
   try {
+        if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
     const { name, description, members, admins } = req.body;
 
     const team = new Team({
@@ -79,6 +89,9 @@ exports.createTeam = async (req, res) => {
  */
 exports.updateTeam = async (req, res) => {
   try {
+        if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
     const { name, description, members, admins } = req.body;
 
     const team = await Team.findByIdAndUpdate(
@@ -111,6 +124,9 @@ exports.updateTeam = async (req, res) => {
  */
 exports.deleteTeam = async (req, res) => {
   try {
+        if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
     const team = await Team.findByIdAndDelete(req.params.id);
 
     if (!team) {

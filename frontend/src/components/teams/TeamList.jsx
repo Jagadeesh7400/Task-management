@@ -16,7 +16,16 @@ const TeamList = () => {
       setLoading(true);
       try {
         const response = await api.get("/teams");
-        setTeams(response.data);
+          if (user?.role !== 'admin') {
+            // Filter teams to only include those where the user is a member
+            const userTeams = response.data.filter(team =>
+              team.members.some(member => member._id === user?.id)
+            );
+            setTeams(userTeams);
+          } else {
+            // If the user is an admin, show all teams
+            setTeams(response.data);
+          }
       } catch (err) {
         console.error("Error fetching teams:", err);
         setError(err.message || "Failed to load teams.");
@@ -52,7 +61,7 @@ const TeamList = () => {
           <div className="flex items-center mt-2">
             <Users className="h-4 w-4 mr-2 text-gray-500" />
             <span>
-              Members:{" "}
+              Members:
               {team.members.map((member) => member.name).join(", ")}
             </span>
           </div>

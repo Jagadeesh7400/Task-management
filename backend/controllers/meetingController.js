@@ -13,7 +13,12 @@ const Meeting = require("../models/Meeting");
  */
 exports.getMeetings = async (req, res) => {
   try {
-    const meetings = await Meeting.find().populate("participants", "name email").populate("teams", "name");
+    const meetings = await Meeting.find({
+      $or: [
+        { createdBy: req.user.id },
+        { participants: req.user.id }
+      ]
+    }).populate("participants", "name email").populate("teams", "name");
     res.json(meetings);
   } catch (error) {
     console.error("Get meetings error:", error);
@@ -29,7 +34,13 @@ exports.getMeetings = async (req, res) => {
  */
 exports.getMeeting = async (req, res) => {
   try {
-    const meeting = await Meeting.findById(req.params.id).populate(
+    const meeting = await Meeting.findOne({
+      _id: req.params.id,
+      $or: [
+        { createdBy: req.user.id },
+        { participants: req.user.id }
+      ]
+    }).populate(
       "participants",
       "name email"
     ).populate("teams", "name");
@@ -88,7 +99,16 @@ exports.updateMeeting = async (req, res) => {
     const { title, description, startTime, endTime, participants, teams, purpose, jitsiRoomId } =
       req.body;
 
-    const meeting = await Meeting.findByIdAndUpdate(
+    const meeting = await Meeting.findOne({
+      _id: req.params.id,
+      createdBy: req.user.id
+    });
+
+    if (!meeting) {
+      return res.status(404).json({ message: "Meeting not found or unauthorized" });
+    }
+
+    const updatedMeeting = await Meeting.findByIdAndUpdate(
       req.params.id,
       {
         title,
@@ -103,11 +123,11 @@ exports.updateMeeting = async (req, res) => {
       { new: true }
     );
 
-    if (!meeting) {
+    if (!updatedMeeting) {
       return res.status(404).json({ message: "Meeting not found" });
     }
 
-    res.json(meeting);
+    res.json(updatedMeeting);
   } catch (error) {
     console.error("Update meeting error:", error);
     res.status(500).json({ message: "Server error" });
@@ -122,9 +142,18 @@ exports.updateMeeting = async (req, res) => {
  */
 exports.deleteMeeting = async (req, res) => {
   try {
-    const meeting = await Meeting.findByIdAndDelete(req.params.id);
+     const meeting = await Meeting.findOne({
+      _id: req.params.id,
+      createdBy: req.user.id
+    });
 
     if (!meeting) {
+      return res.status(404).json({ message: "Meeting not found or unauthorized" });
+    }
+    
+    const deletedMeeting = await Meeting.findByIdAndDelete(req.params.id);
+
+    if (!deletedMeeting) {
       return res.status(404).json({ message: "Meeting not found" });
     }
 

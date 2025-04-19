@@ -238,6 +238,13 @@ exports.updateUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Prevent admin from demoting themselves
+    if (req.user.id === user.id && role !== undefined && role !== "admin") {
+      return res.status(400).json({
+        message: "Admin cannot demote themselves.",
+      });
+    }
+
     // Update fields
     if (name) user.name = name;
     if (email) user.email = email;
@@ -270,6 +277,11 @@ exports.deleteUser = async (req, res) => {
     // Check if user is admin
     if (req.user.role !== "admin") {
       return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    // Prevent admin from deleting themselves
+    if (req.user.id === req.params.id) {
+      return res.status(400).json({ message: "Admin cannot delete themselves." });
     }
 
     // Find and delete user

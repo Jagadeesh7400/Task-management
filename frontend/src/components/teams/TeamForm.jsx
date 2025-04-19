@@ -1,4 +1,4 @@
-"use client";
+/"use client";
 
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,6 +6,7 @@ import { createTeam, updateTeam } from "@/store/teamSlice";
 import { api } from "@/services/api"; // Import your api
 import { toast } from "react-hot-toast";
 import { X } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const TeamForm = ({ team, onClose }) => {
   const [name, setName] = useState(team?.name || "");
@@ -15,6 +16,7 @@ const TeamForm = ({ team, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
+    const { user } = useAuth();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -37,6 +39,10 @@ const TeamForm = ({ team, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+     if (user?.role !== 'admin') {
+      toast.error("You are not authorized to perform this action.");
+      return;
+    }
     try {
       const teamData = {
         name,
@@ -69,6 +75,10 @@ const TeamForm = ({ team, onClose }) => {
       setMembers(members.filter((member) => member._id !== user._id));
     } else {
       // Add the user to the selected members
+           if (!user._id) {
+        toast.error("Invalid user data. User ID is missing.");
+        return;
+      }
       setMembers([...members, user]);
     }
   };

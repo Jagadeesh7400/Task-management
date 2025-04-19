@@ -5,9 +5,11 @@ import { Edit, Trash } from "lucide-react";
 import { useDispatch } from 'react-redux';
 import { deleteTeam } from "@/store/teamSlice";
 import { toast } from "react-hot-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 const TeamTable = ({ teams, onEdit }) => {
   const dispatch = useDispatch();
+    const { user } = useAuth();
 
   const handleDelete = async (id) => {
     try {
@@ -35,6 +37,8 @@ const TeamTable = ({ teams, onEdit }) => {
               <td className="py-2 px-4 border-b">{team.name}</td>
               <td className="py-2 px-4 border-b">{team.description}</td>
               <td className="py-2 px-4 border-b">
+                 {user?.role === 'admin' && (
+                <>
                 <button
                   onClick={() => onEdit(team)}
                   className="text-blue-500 hover:text-blue-700 mr-2"
@@ -47,6 +51,8 @@ const TeamTable = ({ teams, onEdit }) => {
                 >
                   <Trash className="inline-block" size={16} />
                 </button>
+                 </>
+                 )}
               </td>
             </tr>
           ))}
@@ -57,5 +63,3 @@ const TeamTable = ({ teams, onEdit }) => {
 };
 
 export default TeamTable;
-
-    
