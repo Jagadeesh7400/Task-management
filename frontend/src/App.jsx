@@ -23,6 +23,13 @@ import TeamsPage from "@/pages/TeamsPage"
 import ManageTeamsPage from "@/pages/admin/ManageTeamsPage"
 
 import "@/styles/main.css"
+import "@/styles/index.css"
+import "@/styles/layout.css"
+import "@/styles/tasks.css"
+import "@/styles/admin.css"
+import "@/styles/auth.css"
+import "@/styles/profile.css"
+
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn") === "true")
@@ -149,4 +156,3 @@ const App = () => {
 }
 
 export default App
-

@@ -6,10 +6,8 @@ import path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react({
-      babel: {
-        presets: ["@babel/preset-env", "@babel/preset-react"]
-      }
+    react( {
+      presets: ["@babel/preset-env", "@babel/preset-react"]
     }),
     tailwindcss()
   ],
