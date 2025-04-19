@@ -15,6 +15,9 @@ import UserEdit from "./pages/admin/UserEdit"
 import Unauthorized from "./pages/Unauthorized"
 import { checkApiAvailability } from "./services/api"
 import LoadingScreen from "./components/ui/LoadingScreen"
+import { AuthProvider } from "./hooks/useAuth"
+import ProtectedRoute from "./components/auth/ProtectedRoute"
+import TasksPage from "./pages/TasksPage"
 
 import "./styles/main.css"
 
@@ -44,51 +47,80 @@ const App = () => {
   const demoMode = !apiAvailable
 
   return (
-    <Router>
-      {demoMode && (
-        <div className="demo-mode-banner">Backend API not available. Running in demo mode with mock data.</div>
-      )}
-      <Routes>
-        {/* Public routes */}
-        <Route path="/login" element={!isLoggedIn ? <Login demoMode={demoMode} /> : <Navigate to="/dashboard" />} />
-        <Route
-          path="/register"
-          element={!isLoggedIn ? <Register demoMode={demoMode} /> : <Navigate to="/dashboard" />}
-        />
-        <Route
-          path="/forgot-password"
-          element={!isLoggedIn ? <ForgotPassword demoMode={demoMode} /> : <Navigate to="/dashboard" />}
-        />
-        <Route path="/verify-email/:token" element={<VerifyEmail demoMode={demoMode} />} />
-        <Route path="/unauthorized" element={<Unauthorized />} />
+    <AuthProvider>
+      <Router>
+        {demoMode && (
+          <div className="demo-mode-banner">Backend API not available. Running in demo mode with mock data.</div>
+        )}
+        <Routes>
+          {/* Public routes */}
+          <Route path="/login" element={!isLoggedIn ? <Login demoMode={demoMode} /> : <Navigate to="/dashboard" />} />
+          <Route
+            path="/register"
+            element={!isLoggedIn ? <Register demoMode={demoMode} /> : <Navigate to="/dashboard" />}
+          />
+          <Route
+            path="/forgot-password"
+            element={!isLoggedIn ? <ForgotPassword demoMode={demoMode} /> : <Navigate to="/dashboard" />}
+          />
+          <Route path="/verify-email/:token" element={<VerifyEmail demoMode={demoMode} />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
-        {/* Protected routes */}
-        <Route path="/" element={isLoggedIn ? <MainLayout /> : <Navigate to="/login" />}>
-          <Route index element={<Navigate to="/dashboard" />} />
-          <Route path="dashboard" element={<TaskBoard />} />
-          <Route path="tasks" element={<TaskBoard />} />
-          <Route path="profile" element={<Profile />} />
+          {/* Protected routes */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <MainLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="/dashboard" />} />
+            <Route path="dashboard" element={<TaskBoard />} />
+            <Route path="tasks" element={<TasksPage />} />
+            <Route path="profile" element={<Profile />} />
 
-          {/* Admin routes */}
-          {userRole === "admin" ? (
-            <Route path="admin">
-              <Route index element={<AdminDashboard />} />
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="users" element={<UserManagement />} />
-              <Route path="users/:id/edit" element={<UserEdit />} />
-              <Route path="users/new" element={<UserEdit />} />
-            </Route>
-          ) : (
-            <Route path="admin/*" element={<Navigate to="/unauthorized" />} />
-          )}
-        </Route>
+            {/* Admin routes */}
+            {userRole === "admin" ? (
+              <Route path="admin">
+                <Route index element={<AdminDashboard />} />
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route
+                  path="users"
+                  element={
+                    <ProtectedRoute requireAdmin={true}>
+                      <UserManagement />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="users/:id/edit"
+                  element={
+                    <ProtectedRoute requireAdmin={true}>
+                      <UserEdit />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="users/new"
+                  element={
+                    <ProtectedRoute requireAdmin={true}>
+                      <UserEdit />
+                    </ProtectedRoute>
+                  }
+                />
+              </Route>
+            ) : (
+              <Route path="admin/*" element={<Navigate to="/unauthorized" />} />
+            )}
+          </Route>
 
-        {/* Fallback route */}
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </Router>
+          {/* Fallback route */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   )
 }
 
 export default App
-

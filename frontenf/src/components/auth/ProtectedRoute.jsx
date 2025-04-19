@@ -30,4 +30,3 @@ export default function ProtectedRoute({ children, requireAdmin = false, require
 
   return children
 }
-

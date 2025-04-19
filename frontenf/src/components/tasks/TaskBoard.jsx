@@ -6,92 +6,34 @@ import TaskCard from "./TaskCard"
 import AddTaskModal from "./AddTaskModal"
 import ErrorBoundary from "../ErrorBoundary"
 import "../../styles/tasks.css"
+import { useTasks } from "../../hooks/useTasks"
 
 const TaskBoard = () => {
-  const [tasks, setTasks] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [showAddModal, setShowAddModal] = useState(false)
   const [viewMode, setViewMode] = useState("board") // 'board' or 'list'
   const [filter, setFilter] = useState("all")
-
-  // Mock data for demonstration
-  const mockTasks = [
-    {
-      id: "1",
-      title: "Implement user authentication",
-      description: "Add user authentication functionality to the website.",
-      status: "completed",
-      priority: "high",
-      startDate: "2024-04-01",
-      endDate: "2024-05-20",
-      assignee: "John Doe",
-    },
-    {
-      id: "2",
-      title: "Update website content",
-      description: "Update the About Us page with new team members.",
-      status: "pending",
-      priority: "medium",
-      startDate: "2024-04-15",
-      endDate: "2024-04-30",
-      assignee: "Jane Smith",
-    },
-    {
-      id: "3",
-      title: "Design new logo",
-      description: "Create a new logo for the company rebranding.",
-      status: "in-progress",
-      priority: "high",
-      startDate: "2024-04-10",
-      endDate: "2024-05-10",
-      assignee: "Mike Johnson",
-    },
-    {
-      id: "4",
-      title: "Deploy marketing campaign",
-      description: "Launch the new marketing campaign on social media.",
-      status: "pending",
-      priority: "medium",
-      startDate: "2024-04-20",
-      endDate: "2024-05-05",
-      assignee: "Sarah Williams",
-    },
-    {
-      id: "5",
-      title: "Review project timelines",
-      description: "Review and adjust project timelines based on new requirements.",
-      status: "pending",
-      priority: "low",
-      startDate: "2024-04-25",
-      endDate: "2024-05-01",
-      assignee: "David Brown",
-    },
-    {
-      id: "6",
-      title: "Drop Database",
-      description: "Drop Mongo Db Database",
-      status: "pending",
-      priority: "critical",
-      startDate: "2024-04-28",
-      endDate: "2024-05-05",
-      assignee: "Alex Chen",
-    },
-  ]
+  const { tasks, fetchTasks, updateTask } = useTasks()
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setTasks(mockTasks)
+    fetchTasks()
+  }, [fetchTasks])
+
+  const handleStatusChange = async (taskId, newStatus) => {
+    try {
+      setIsLoading(true)
+      await updateTask(taskId, { status: newStatus })
+      await fetchTasks()
+    } catch (error) {
+      console.error("Error updating task status:", error)
+      // Handle error
+    } finally {
       setIsLoading(false)
-    }, 1000)
-  }, [])
+    }
+  }
 
   const handleAddTask = (newTask) => {
     setTasks([...tasks, { ...newTask, id: Date.now().toString() }])
-  }
-
-  const handleStatusChange = (taskId, newStatus) => {
-    setTasks(tasks.map((task) => (task.id === taskId ? { ...task, status: newStatus } : task)))
   }
 
   const getFilteredTasks = () => {
@@ -316,4 +258,3 @@ const TaskBoard = () => {
 }
 
 export default TaskBoard
-

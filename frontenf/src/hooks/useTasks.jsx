@@ -2,6 +2,7 @@
 
 import { useState, useCallback, createContext, useContext } from "react"
 import { useAuth } from "./useAuth"
+import { api, checkApiAvailability } from "../services/api"
 
 const TasksContext = createContext(null)
 
@@ -13,6 +14,7 @@ const mockTasks = [
     description: "Finalize the project proposal for the client meeting",
     status: "pending",
     deadline: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days from now
+    priority: "high",
     userId: "2",
   },
   {
@@ -21,6 +23,7 @@ const mockTasks = [
     description: "Review pull requests and merge approved changes",
     status: "completed",
     deadline: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+    priority: "medium",
     userId: "2",
   },
   {
@@ -29,6 +32,7 @@ const mockTasks = [
     description: "Weekly team sync to discuss project progress",
     status: "pending",
     deadline: new Date(Date.now() + 10 * 60 * 1000).toISOString(), // 10 minutes from now
+    priority: "low",
     userId: "2",
   },
 ]
@@ -39,12 +43,12 @@ export const TasksProvider = ({ children }) => {
   const { user } = useAuth()
 
   const fetchTasks = useCallback(async () => {
-    const isApiAvailable = await checkApiAvailability();
+    const isApiAvailable = await checkApiAvailability()
     if (!isApiAvailable) {
       // Use mock tasks if API is unavailable
-      setTasks(mockTasks.filter((task) => task.userId === user.id));
-      setIsLoading(false);
-      return;
+      setTasks(mockTasks.filter((task) => task.userId === user.id))
+      setIsLoading(false)
+      return
     }
     if (!user) return
 
@@ -52,13 +56,13 @@ export const TasksProvider = ({ children }) => {
 
     try {
       // In a real app, this would make an API call
-      // const response = await api.get('/tasks');
+      const response = await api.get("/tasks")
 
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 500))
 
       // Filter tasks for the current user
-      const userTasks = user.role === "admin" ? mockTasks : mockTasks.filter((task) => task.userId === user.id)
+      const userTasks = user.role === "admin" ? response.data : response.data.filter((task) => task.userId === user.id)
 
       setTasks(userTasks)
       return userTasks
@@ -76,7 +80,7 @@ export const TasksProvider = ({ children }) => {
 
       try {
         // In a real app, this would make an API call
-        // const response = await api.post('/tasks', taskData);
+        const response = await api.post("/tasks", taskData)
 
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1000))
@@ -101,7 +105,7 @@ export const TasksProvider = ({ children }) => {
   const updateTask = useCallback(async (taskId, taskData) => {
     try {
       // In a real app, this would make an API call
-      // const response = await api.put(`/tasks/${taskId}`, taskData);
+      const response = await api.put(`/tasks/${taskId}`, taskData)
 
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 500))
@@ -118,7 +122,7 @@ export const TasksProvider = ({ children }) => {
   const deleteTask = useCallback(async (taskId) => {
     try {
       // In a real app, this would make an API call
-      // await api.delete(`/tasks/${taskId}`);
+      await api.delete(`/tasks/${taskId}`)
 
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 500))

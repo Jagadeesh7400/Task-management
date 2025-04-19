@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Menu, Search, Bell, User, X, Clock, CheckSquare } from "lucide-react"
 import "../../styles/layout.css"
+import NotificationPanel from "../notifications/NotificationPanel"
 
 const Navbar = ({ toggleSidebar, isAdmin }) => {
   const [searchQuery, setSearchQuery] = useState("")
@@ -51,53 +52,9 @@ const Navbar = ({ toggleSidebar, isAdmin }) => {
         <div className="notification-container">
           <button className="icon-button" onClick={() => setShowNotifications(!showNotifications)}>
             <Bell size={20} />
-            <span className="notification-badge">3</span>
           </button>
 
-          {showNotifications && (
-            <div className="notification-dropdown">
-              <div className="notification-header">
-                <h3>Notifications</h3>
-                <button>Mark all as read</button>
-              </div>
-
-              <div className="notification-list">
-                <div className="notification-item unread">
-                  <div className="notification-icon task-added">
-                    <Bell size={16} />
-                  </div>
-                  <div className="notification-content">
-                    <p>New task assigned: "Update website content"</p>
-                    <span>30 minutes ago</span>
-                  </div>
-                </div>
-
-                <div className="notification-item unread">
-                  <div className="notification-icon deadline">
-                    <Clock size={16} />
-                  </div>
-                  <div className="notification-content">
-                    <p>Task deadline approaching: "Design new logo"</p>
-                    <span>1 hour ago</span>
-                  </div>
-                </div>
-
-                <div className="notification-item">
-                  <div className="notification-icon completed">
-                    <CheckSquare size={16} />
-                  </div>
-                  <div className="notification-content">
-                    <p>Task completed: "Implement user authentication"</p>
-                    <span>Yesterday</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="notification-footer">
-                <button>View all notifications</button>
-              </div>
-            </div>
-          )}
+          {showNotifications && <NotificationPanel />}
         </div>
 
         <div className="user-menu">
@@ -114,4 +71,3 @@ const Navbar = ({ toggleSidebar, isAdmin }) => {
 }
 
 export default Navbar
-

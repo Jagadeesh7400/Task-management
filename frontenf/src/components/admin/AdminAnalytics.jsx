@@ -3,6 +3,21 @@
 import { useState, useEffect } from "react"
 import { Activity, Users, CheckSquare, Clock, Calendar } from "lucide-react"
 import { useAdmin } from "../../hooks/useAdmin"
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+} from "recharts"
 import "../../styles/admin.css"
 
 export default function AdminAnalytics() {
@@ -283,112 +298,48 @@ export default function AdminAnalytics() {
 // Chart Components
 function TaskCompletionChart({ data }) {
   return (
-    <div className="w-full h-full flex items-end">
-      {data.map((item, index) => (
-        <div key={index} className="flex-1 flex flex-col items-center">
-          <div className="w-full flex flex-col items-center space-y-1">
-            <div className="w-8 bg-primary-color rounded-t-md" style={{ height: `${item.completed * 8}px` }}></div>
-            <div className="w-8 bg-warning-color rounded-t-md" style={{ height: `${item.pending * 8}px` }}></div>
-          </div>
-          <div className="text-xs text-dark-color dark:text-light-color mt-2">{item.name}</div>
-        </div>
-      ))}
-    </div>
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" stroke="var(--primary-color)" />
+        <YAxis stroke="var(--primary-color)" />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="completed" stackId="a" fill="var(--primary-color)" />
+        <Bar dataKey="pending" stackId="a" fill="var(--warning-color)" />
+      </BarChart>
+    </ResponsiveContainer>
   )
 }
 
 function UserActivityChart({ data }) {
-  // Find max value for scaling
-  const maxValue = Math.max(...data.map((item) => item.tasks)) * 1.2
-
   return (
-    <div className="w-full h-full flex flex-col">
-      <div className="flex-1 relative">
-        {/* Line */}
-        <svg className="w-full h-full">
-          <polyline
-            points={data
-              .map((item, index) => `${(index / (data.length - 1)) * 100}% ${100 - (item.tasks / maxValue) * 100}%`)
-              .join(" ")}
-            fill="none"
-            stroke="#0077B6"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          {/* Dots */}
-          {data.map((item, index) => (
-            <circle
-              key={index}
-              cx={`${(index / (data.length - 1)) * 100}%`}
-              cy={`${100 - (item.tasks / maxValue) * 100}%`}
-              r="4"
-              fill="#0077B6"
-            />
-          ))}
-        </svg>
-      </div>
-      <div className="h-6 flex justify-between">
-        {data.map((item, index) => (
-          <div key={index} className="text-xs text-dark-color dark:text-light-color">
-            {item.name}
-          </div>
-        ))}
-      </div>
-    </div>
+    <ResponsiveContainer width="100%" height="100%">
+      <LineChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" stroke="var(--primary-color)" />
+        <YAxis stroke="var(--primary-color)" />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey="tasks" stroke="var(--primary-color)" activeDot={{ r: 8 }} />
+      </LineChart>
+    </ResponsiveContainer>
   )
 }
 
 function TaskDistributionChart({ data }) {
-  const total = data.reduce((sum, item) => sum + item.value, 0)
-  const radius = 80
-  const circumference = 2 * Math.PI * radius
-
-  let startAngle = 0
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"]
 
   return (
-    <div className="relative w-64 h-64">
-      <svg width="100%" height="100%" viewBox="0 0 200 200">
-        {data.map((item, index) => {
-          const percentage = item.value / total
-          const endAngle = startAngle + percentage * 2 * Math.PI
-
-          // Calculate path
-          const x1 = 100 + radius * Math.cos(startAngle)
-          const y1 = 100 + radius * Math.sin(startAngle)
-          const x2 = 100 + radius * Math.cos(endAngle)
-          const y2 = 100 + radius * Math.sin(endAngle)
-
-          // Determine if the arc should be drawn as a large arc
-          const largeArcFlag = percentage > 0.5 ? 1 : 0
-
-          // Create path
-          const path = [
-            `M 100 100`,
-            `L ${x1} ${y1}`,
-            `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-            `Z`,
-          ].join(" ")
-
-          const currentStartAngle = startAngle
-          startAngle = endAngle
-
-          return <path key={index} d={path} fill={item.color} stroke="#fff" strokeWidth="1" />
-        })}
-      </svg>
-
-      {/* Legend */}
-      <div className="absolute top-full mt-4 left-1/2 transform -translate-x-1/2 flex flex-wrap justify-center gap-3">
-        {data.map((item, index) => (
-          <div key={index} className="flex items-center">
-            <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: item.color }}></div>
-            <span className="text-xs text-dark-color dark:text-light-color">
-              {item.name} ({item.value}%)
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart>
+        <Pie dataKey="value" isAnimationActive={false} data={data} cx="50%" cy="50%" outerRadius={80} fill="#8884d8" label>
+          {data.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip />
+      </PieChart>
+    </ResponsiveContainer>
   )
 }
-

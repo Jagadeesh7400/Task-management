@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { X } from "lucide-react"
+import { useTasks } from "../../hooks/useTasks"
 import "../../styles/tasks.css"
 
 const AddTaskModal = ({ onClose, onAddTask }) => {
@@ -15,19 +16,31 @@ const AddTaskModal = ({ onClose, onAddTask }) => {
     assignee: "",
   })
 
+  const { addTask } = useTasks() // Using useTasks hook to access addTask
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setTask((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (typeof onAddTask === "function") {
-      onAddTask(task)
-    } else {
-      console.error("onAddTask is not a function or is undefined")
+
+    try {
+      // Call the addTask function from the useTasks hook
+      const newTask = await addTask(task)
+
+      // If addTask was successful, call the onAddTask callback
+      if (newTask) {
+        onAddTask(newTask)
+        onClose()
+      } else {
+        console.error("Failed to add task")
+      }
+    } catch (error) {
+      console.error("Error adding task:", error)
+      // Handle error as needed, maybe set an error state to display to the user
     }
-    onClose()
   }
 
   return (
@@ -118,4 +131,3 @@ const AddTaskModal = ({ onClose, onAddTask }) => {
 }
 
 export default AddTaskModal
-
