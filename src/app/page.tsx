@@ -1,9 +1,11 @@
+
 "use client";
 
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import JitsiMeet from "@/components/JitsiMeet";
 
 export default function Home() {
   const [date, setDate] = useState<Date>();
@@ -57,18 +59,18 @@ export default function Home() {
           </CardContent>
         </Card>
 
-        {/* Jitsi Integration Placeholder */}
+        {/* Jitsi Integration */}
         <Card>
           <CardHeader>
             <CardTitle>Jitsi Integration</CardTitle>
           </CardHeader>
           <CardContent>
-            <p>
-              Jitsi Meet will be integrated here for seamless video conferencing.
-            </p>
+            <JitsiMeet roomName="ZidioTaskMeeting" displayName="User" />
           </CardContent>
         </Card>
       </div>
     </div>
   );
 }
+
+    
