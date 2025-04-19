@@ -18,6 +18,8 @@ import LoadingScreen from "./components/ui/LoadingScreen"
 import { AuthProvider } from "./hooks/useAuth"
 import ProtectedRoute from "./components/auth/ProtectedRoute"
 import TasksPage from "./pages/TasksPage"
+import MeetingsPage from "./pages/MeetingsPage"
+import TeamsPage from "./pages/TeamsPage"
 
 import "./styles/main.css"
 
@@ -91,6 +93,8 @@ const App = () => {
             <Route path="dashboard" element={<TaskBoard />} />
             <Route path="tasks" element={<TasksPage />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="meetings" element={<MeetingsPage />} />
+            <Route path="teams" element={<TeamsPage />} />
 
             {/* Admin routes */}
             {userRole === "admin" ? (
@@ -136,4 +140,3 @@ const App = () => {
 }
 
 export default App
-

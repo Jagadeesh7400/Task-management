@@ -7,6 +7,8 @@ const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const meetingRoutes = require("./routes/meetingRoutes");
+const teamRoutes = require("./routes/teamRoutes");
 const { authenticateToken } = require("./middleware/authMiddleware");
 const { startReminderService } = require('./services/reminderService');
 const { deleteOldLogs } = require('./services/auditService');
@@ -36,6 +38,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/tasks", authenticateToken, taskRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", authenticateToken, adminRoutes);
+app.use("/api/meetings", authenticateToken, meetingRoutes);
+app.use("/api/teams", authenticateToken, teamRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -61,4 +65,3 @@ cron.schedule('0 0 * * *', async () => {
     console.error('Error cleaning up old audit logs:', error);
   }
 });
-
