@@ -13,12 +13,17 @@ const Meeting = require("../models/Meeting");
  */
 exports.getMeetings = async (req, res) => {
   try {
-    const meetings = await Meeting.find({
-      $or: [
-        { createdBy: req.user.id },
-        { participants: req.user.id }
-      ]
-    }).populate("participants", "name email").populate("teams", "name");
+    let query = {};
+    // If user is not an admin, only show meetings they are a part of
+    if (req.user.role !== 'admin') {
+      query = {
+        $or: [
+          { createdBy: req.user.id }, // Meetings created by the user
+          { participants: req.user.id }  // Meetings the user is a participant in
+        ]
+      };
+    }
+    const meetings = await Meeting.find(query).populate("participants", "name email").populate("teams", "name");
     res.json(meetings);
   } catch (error) {
     console.error("Get meetings error:", error);
@@ -163,3 +168,4 @@ exports.deleteMeeting = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+

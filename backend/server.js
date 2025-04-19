@@ -27,12 +27,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("MongoDB connection error:", err));
-
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", authenticateToken, taskRoutes);
@@ -65,3 +59,4 @@ cron.schedule('0 0 * * *', async () => {
     console.error('Error cleaning up old audit logs:', error);
   }
 });
+
