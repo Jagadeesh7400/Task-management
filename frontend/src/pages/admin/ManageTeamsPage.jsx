@@ -4,10 +4,19 @@ import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import TeamTable from "@/components/teams/TeamTable";
 import TeamForm from "@/components/teams/TeamForm";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTeams } from "@/store/teamSlice";  // Adjust path
+import LoadingScreen from "@/components/ui/LoadingScreen";
 
 const ManageTeamsPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
+  const dispatch = useDispatch();
+  const { teamsList, loading, error } = useSelector((state) => state.teams);
+
+  useEffect(() => {
+    dispatch(fetchTeams());
+  }, [dispatch]);
 
   const handleAddTeam = () => {
     setSelectedTeam(null); // Clear any existing selected team
@@ -24,6 +33,14 @@ const ManageTeamsPage = () => {
     setSelectedTeam(null);
   };
 
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
+  if (error) {
+    return <p>Error loading teams: {error}</p>;
+  }
+
   return (
     <div className="container mx-auto mt-8">
       <div className="flex justify-between items-center mb-4">
@@ -37,7 +54,7 @@ const ManageTeamsPage = () => {
         </button>
       </div>
 
-      <TeamTable onEdit={handleEditTeam} />
+      <TeamTable teams={teamsList} onEdit={handleEditTeam} />
 
       {showForm && (
         <TeamForm

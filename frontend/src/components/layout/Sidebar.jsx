@@ -46,7 +46,8 @@ const Sidebar = ({ isOpen, toggleSidebar, isAdmin }) => {
     { icon: <BarChart2 size={20} />, label: "Analytics", path: "/admin/analytics" },
     { icon: <Settings size={20} />, label: "Settings", path: "/admin/settings" },
         { icon: <Video size={20} />, label: "Meetings", path: "/meetings" },
-    { icon: <UserPlus size={20} />, label: "Teams", path: "/teams" },
+            { icon: <UserPlus size={20} />, label: "Manage Teams", path: "/admin/teams" },
+
   ]
 
   const navItems = isAdmin ? adminNavItems : userNavItems

@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { api } from "@/services/api";
+import { useDispatch, useSelector } from 'react-redux';
+import { createTeam, updateTeam } from "@/store/teamSlice";
+import { api } from "@/services/api"; // Import your api
 import { toast } from "react-hot-toast";
 import { X } from "lucide-react";
 
@@ -12,6 +14,7 @@ const TeamForm = ({ team, onClose }) => {
   const [availableUsers, setAvailableUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -43,11 +46,11 @@ const TeamForm = ({ team, onClose }) => {
 
       if (team) {
         // Update existing team
-        await api.put(`/teams/${team._id}`, teamData);
+        await dispatch(updateTeam({ id: team._id, teamData })).unwrap();
         toast.success("Team updated successfully!");
       } else {
         // Create new team
-        await api.post("/teams", teamData);
+        await dispatch(createTeam(teamData)).unwrap();
         toast.success("Team created successfully!");
       }
       onClose(); // Close the modal after successful submission

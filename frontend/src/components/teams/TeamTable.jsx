@@ -1,51 +1,23 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Edit, Trash } from "lucide-react";
-import { api } from "@/services/api";
+import { useDispatch } from 'react-redux';
+import { deleteTeam } from "@/store/teamSlice";
 import { toast } from "react-hot-toast";
 
-const TeamTable = ({ onEdit }) => {
-  const [teams, setTeams] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchTeams = async () => {
-      setLoading(true);
-      try {
-        const response = await api.get("/teams");
-        setTeams(response.data);
-      } catch (err) {
-        console.error("Error fetching teams:", err);
-        setError(err.message || "Failed to load teams.");
-        toast.error(err.message || "Failed to load teams.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTeams();
-  }, []);
+const TeamTable = ({ teams, onEdit }) => {
+  const dispatch = useDispatch();
 
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/teams/${id}`);
-      setTeams(teams.filter((team) => team._id !== id));
+      await dispatch(deleteTeam(id)).unwrap(); // unwrap to catch errors
       toast.success("Team deleted successfully!");
     } catch (err) {
       console.error("Error deleting team:", err);
       toast.error(err.message || "Failed to delete team.");
     }
   };
-
-  if (loading) {
-    return <p>Loading teams...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
 
   return (
     <div className="overflow-x-auto">
