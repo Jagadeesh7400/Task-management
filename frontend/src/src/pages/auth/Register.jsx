@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Eye, EyeOff, UserPlus } from "lucide-react"
-import ZidioLogo from "../../components/ui/ZidioLogo"
+import ZidioLogo from "../../../components/ui/ZidioLogo"
 import { useAuth } from "../../hooks/useAuth"
 import "../../styles/auth.css"
 

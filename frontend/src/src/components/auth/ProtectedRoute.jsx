@@ -2,7 +2,7 @@
 
 import { Navigate, useLocation } from "react-router-dom"
 import { useAuth } from "../../hooks/useAuth"
-import LoadingScreen from "../ui/LoadingScreen"
+import LoadingScreen from "../../../components/ui/LoadingScreen"
 import "../../styles/auth.css"
 
 export default function ProtectedRoute({ children, requireAdmin = false, requireVerified = true }) {

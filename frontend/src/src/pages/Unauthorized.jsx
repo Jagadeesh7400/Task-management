@@ -2,7 +2,7 @@
 
 import { Link } from "react-router-dom"
 import { ArrowLeft, ShieldAlert } from "lucide-react"
-import ZidioLogo from "../components/ui/ZidioLogo"
+import ZidioLogo from "../../components/ui/ZidioLogo"
 
 export default function Unauthorized() {
   return (

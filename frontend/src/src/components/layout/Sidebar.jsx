@@ -12,7 +12,7 @@ import {
   Settings,
   LogOut,
 } from "lucide-react"
-import ZidioLogo from "../ui/ZidioLogo"
+import ZidioLogo from "../../../components/ui/ZidioLogo"
 import "../../styles/layout.css"
 
 const Sidebar = ({ isOpen, toggleSidebar, isAdmin }) => {

@@ -3,7 +3,7 @@ use client"
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Eye, EyeOff, LogIn } from "lucide-react"
-import ZidioLogo from "../../components/ui/ZidioLogo"
+import ZidioLogo from "../../../components/ui/ZidioLogo"
 import "../../styles/auth.css"
 import { useAuth } from "@/hooks/useAuth"
 
