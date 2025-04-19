@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Activity, Users, CheckSquare, Clock, Calendar } from "lucide-react"
-import { useAdmin } from "../../hooks/useAdmin"
+import { useAdmin } from "@/hooks/useAdmin"
 import {
   BarChart,
   Bar,
@@ -18,7 +18,7 @@ import {
   LineChart,
   Line,
 } from "recharts"
-import "../../styles/admin.css"
+import "@/styles/admin.css"
 
 export default function AdminAnalytics() {
   const { getStats } = useAdmin()
@@ -102,7 +102,7 @@ export default function AdminAnalytics() {
             Week
           </button>
           <button
-            onClick={() => setTimeRange("month")}
+            onClick={()={() => setTimeRange("month")}
             className={`px-3 py-1 rounded-md text-sm ${
               timeRange === "month"
                 ? "bg-primary-color text-white"

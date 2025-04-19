@@ -89,4 +89,3 @@ const Sidebar = ({ isOpen, toggleSidebar, isAdmin }) => {
 }
 
 export default Sidebar
-

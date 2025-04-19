@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { Outlet, useLocation } from "react-router-dom"
-import Sidebar from "./Sidebar"
-import Navbar from "./Navbar"
-import "../../styles/layout.css"
+import Sidebar from "@/components/layout/Sidebar"
+import Navbar from "@/components/layout/Navbar"
+import "@/styles/layout.css"
 
 const MainLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true)

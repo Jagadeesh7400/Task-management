@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import { Menu, Search, Bell, User, X, Clock, CheckSquare } from "lucide-react"
-import "../../styles/layout.css"
-import NotificationPanel from "../notifications/NotificationPanel"
+import "@/styles/layout.css"
+import NotificationPanel from "@/components/notifications/NotificationPanel"
 
 const Navbar = ({ toggleSidebar, isAdmin }) => {
   const [searchQuery, setSearchQuery] = useState("")
