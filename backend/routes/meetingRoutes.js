@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const meetingController = require("../controllers/meetingController");
-const { authenticateToken, isAdmin } = require("../middleware/authMiddleware");
+const { authenticateToken } = require("../middleware/authMiddleware");
 
 /**
  * @fileOverview Meeting routes.

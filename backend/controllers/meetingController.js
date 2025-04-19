@@ -13,7 +13,7 @@ const Meeting = require("../models/Meeting");
  */
 exports.getMeetings = async (req, res) => {
   try {
-    const meetings = await Meeting.find().populate("participants", "name email");
+    const meetings = await Meeting.find().populate("participants", "name email").populate("teams", "name");
     res.json(meetings);
   } catch (error) {
     console.error("Get meetings error:", error);
@@ -32,7 +32,7 @@ exports.getMeeting = async (req, res) => {
     const meeting = await Meeting.findById(req.params.id).populate(
       "participants",
       "name email"
-    );
+    ).populate("teams", "name");
 
     if (!meeting) {
       return res.status(404).json({ message: "Meeting not found" });
@@ -53,7 +53,7 @@ exports.getMeeting = async (req, res) => {
  */
 exports.createMeeting = async (req, res) => {
   try {
-    const { title, description, startTime, endTime, participants, teams, purpose } =
+    const { title, description, startTime, endTime, participants, teams, purpose, jitsiRoomId } =
       req.body;
 
     const meeting = new Meeting({
@@ -65,6 +65,7 @@ exports.createMeeting = async (req, res) => {
       teams,
       createdBy: req.user.id,
       purpose,
+      jitsiRoomId,
     });
 
     await meeting.save();
@@ -84,7 +85,7 @@ exports.createMeeting = async (req, res) => {
  */
 exports.updateMeeting = async (req, res) => {
   try {
-    const { title, description, startTime, endTime, participants, teams, purpose } =
+    const { title, description, startTime, endTime, participants, teams, purpose, jitsiRoomId } =
       req.body;
 
     const meeting = await Meeting.findByIdAndUpdate(
@@ -97,6 +98,7 @@ exports.updateMeeting = async (req, res) => {
         participants,
         teams,
         purpose,
+        jitsiRoomId,
       },
       { new: true }
     );
