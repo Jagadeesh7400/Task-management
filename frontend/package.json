@@ -29,7 +29,8 @@
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",
     "react-redux": "*",
-    "react-router-dom": "^7.3.0"
+    "react-router-dom": "^7.3.0",
+    "@jitsi/react-sdk": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
