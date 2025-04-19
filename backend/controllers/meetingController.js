@@ -1,4 +1,5 @@
 const Meeting = require("../models/Meeting");
+const { v4: uuidv4 } = require('uuid'); // Import UUID
 
 /**
  * @fileOverview Meeting controller to manage meetings.
@@ -69,8 +70,10 @@ exports.getMeeting = async (req, res) => {
  */
 exports.createMeeting = async (req, res) => {
   try {
-    const { title, description, startTime, endTime, participants, teams, purpose, jitsiRoomId } =
+    const { title, description, startTime, endTime, participants, teams, purpose } =
       req.body;
+
+    const jitsiRoomId = uuidv4(); // Generate unique Jitsi Room ID
 
     const meeting = new Meeting({
       title,
@@ -168,4 +171,3 @@ exports.deleteMeeting = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
