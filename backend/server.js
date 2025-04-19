@@ -36,7 +36,7 @@ mongoose
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", authenticateToken, taskRoutes);
-app.use("/api/users", userRoutes);
+app.use("/api/users", authenticateToken, userRoutes);
 app.use("/api/admin", authenticateToken, adminRoutes);
 app.use("/api/meetings", authenticateToken, meetingRoutes);
 app.use("/api/teams", authenticateToken, teamRoutes);
