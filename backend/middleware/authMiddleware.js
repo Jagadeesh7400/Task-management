@@ -1,50 +1,68 @@
-const jwt = require("jsonwebtoken")
-const User = require("../models/User")
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
-// Middleware to authenticate JWT token
+/**
+ * @fileOverview Authentication middleware.
+ * @module middleware/authMiddleware
+ */
+
+/**
+ * Middleware to authenticate JWT token
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Next middleware function.
+ * @returns {Promise<void>}
+ */
 exports.authenticateToken = async (req, res, next) => {
   try {
     // Get token from header
-    const authHeader = req.headers.authorization
-    const token = authHeader && authHeader.split(" ")[1] // Bearer TOKEN
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(" ")[1]; // Bearer TOKEN
 
     if (!token) {
-      return res.status(401).json({ message: "No token, authorization denied" })
+      return res.status(401).json({ message: "No token, authorization denied" });
     }
 
     // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // Find user
-    const user = await User.findById(decoded.id).select("-password")
+    const user = await User.findById(decoded.id).select("-password");
     if (!user) {
-      return res.status(401).json({ message: "Token is not valid" })
+      return res.status(401).json({ message: "Token is not valid" });
     }
 
     // Add user to request
-    req.user = user
-    next()
+    req.user = user;
+    next();
   } catch (error) {
-    console.error("Authentication error:", error)
+    console.error("Authentication error:", error);
 
     if (error.name === "JsonWebTokenError") {
-      return res.status(401).json({ message: "Token is not valid" })
+      return res.status(401).json({ message: "Token is not valid" });
     }
 
     if (error.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Token has expired" })
+      return res.status(401).json({ message: "Token has expired" });
     }
 
-    res.status(500).json({ message: "Server error" })
+    res.status(500).json({ message: "Server error" });
   }
-}
+};
 
-// Middleware to check if user is admin
+/**
+ * Middleware to check if user is admin
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Next middleware function.
+ * @returns {void}
+ */
 exports.isAdmin = (req, res, next) => {
   if (req.user && req.user.role === "admin") {
-    next()
+    next();
   } else {
-    res.status(403).json({ message: "Access denied, admin privileges required" })
+    res
+      .status(403)
+      .json({ message: "Access denied, admin privileges required" });
   }
-}
-
+};

@@ -1,4 +1,9 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+
+/**
+ * @fileOverview Mongoose schema for tasks.
+ * @module models/Task
+ */
 
 const taskSchema = new mongoose.Schema({
   title: {
@@ -71,13 +76,12 @@ const taskSchema = new mongoose.Schema({
       },
     },
   ],
-})
+});
 
 // Update the updatedAt field on save
 taskSchema.pre("save", function (next) {
-  this.updatedAt = Date.now()
-  next()
-})
+  this.updatedAt = Date.now();
+  next();
+});
 
-module.exports = mongoose.model("Task", taskSchema)
-
+module.exports = mongoose.model("Task", taskSchema);

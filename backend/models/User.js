@@ -1,5 +1,10 @@
-const mongoose = require("mongoose")
-const bcrypt = require("bcryptjs")
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+
+/**
+ * @fileOverview Mongoose schema for users.
+ * @module models/User
+ */
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -57,25 +62,30 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-})
+});
 
-// Hash password before saving
+/**
+ * Hash password before saving
+ */
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next()
+  if (!this.isModified("password")) return next();
 
   try {
-    const salt = await bcrypt.genSalt(10)
-    this.password = await bcrypt.hash(this.password, salt)
-    next()
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
   } catch (error) {
-    next(error)
+    next(error);
   }
-})
+});
 
-// Method to compare passwords
+/**
+ * Method to compare passwords
+ * @param {string} candidatePassword - Password to compare.
+ * @returns {Promise<boolean>} - True if passwords match, false otherwise.
+ */
 userSchema.methods.comparePassword = async function (candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password)
-}
+  return await bcrypt.compare(candidatePassword, this.password);
+};
 
-module.exports = mongoose.model("User", userSchema)
-
+module.exports = mongoose.model("User", userSchema);

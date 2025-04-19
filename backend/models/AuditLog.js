@@ -1,4 +1,9 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+
+/**
+ * @fileOverview Mongoose schema for audit logs.
+ * @module models/AuditLog
+ */
 
 const auditLogSchema = new mongoose.Schema({
   userId: {
@@ -32,12 +37,11 @@ const auditLogSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-})
+});
 
 // Index for faster queries
-auditLogSchema.index({ userId: 1, timestamp: -1 })
-auditLogSchema.index({ action: 1, timestamp: -1 })
-auditLogSchema.index({ resourceType: 1, resourceId: 1 })
+auditLogSchema.index({ userId: 1, timestamp: -1 });
+auditLogSchema.index({ action: 1, timestamp: -1 });
+auditLogSchema.index({ resourceType: 1, resourceId: 1 });
 
-module.exports = mongoose.model("AuditLog", auditLogSchema)
-
+module.exports = mongoose.model("AuditLog", auditLogSchema);
