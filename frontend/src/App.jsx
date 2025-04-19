@@ -20,6 +20,7 @@ import ProtectedRoute from "./components/auth/ProtectedRoute"
 import TasksPage from "./pages/TasksPage"
 import MeetingsPage from "./pages/MeetingsPage"
 import TeamsPage from "./pages/TeamsPage"
+import ManageTeamsPage from "./pages/admin/ManageTeamsPage"
 
 import "./styles/main.css"
 
@@ -122,6 +123,14 @@ const App = () => {
                   element={
                     <ProtectedRoute requireAdmin={true}>
                       <UserEdit />
+                    </ProtectedRoute>
+                  }
+                />
+                                <Route
+                  path="teams"
+                  element={
+                    <ProtectedRoute requireAdmin={true}>
+                      <ManageTeamsPage />
                     </ProtectedRoute>
                   }
                 />

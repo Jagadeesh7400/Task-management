@@ -15,12 +15,12 @@ router.get("/", authenticateToken, teamController.getTeams);
 router.get("/:id", authenticateToken, teamController.getTeam);
 
 // Create a new team
-router.post("/", authenticateToken, teamController.createTeam);
+router.post("/", authenticateToken, isAdmin, teamController.createTeam);
 
 // Update a team
-router.put("/:id", authenticateToken, teamController.updateTeam);
+router.put("/:id", authenticateToken, isAdmin, teamController.updateTeam);
 
 // Delete a team
-router.delete("/:id", authenticateToken, teamController.deleteTeam);
+router.delete("/:id", authenticateToken, isAdmin, teamController.deleteTeam);
 
 module.exports = router;
