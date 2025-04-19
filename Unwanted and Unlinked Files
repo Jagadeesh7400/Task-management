@@ -1,8 +1,0 @@
-Potentially unwanted and unlinked files:
-
-frontend/src/app/page.tsx: Appears to be a default Next.js page file that might be unused since the app is structured as a Vite/React application, not a Next.js one.
-frontend/eslint.config.js: Empty or default configuration file that's not actively used in the project.
-frontend/README.md: General README file that might contain outdated or irrelevant information.
-backend/vercel.json: Configuration file for Vercel deployment, likely not needed in the current deployment strategy.
-
-Note: Before deleting any of these files, make sure they are truly unused by checking imports and references within the project. It is always a good idea to back up the project before making any deletions.
