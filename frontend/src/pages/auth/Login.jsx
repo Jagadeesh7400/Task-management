@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react"
@@ -59,8 +60,8 @@ const Login = () => {
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
-                  type="email"
                   id="email"
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
@@ -159,3 +160,4 @@ const Login = () => {
   )
 }
 
+export default Login

@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react"
@@ -11,7 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import "@/styles/auth.css"
 
-export default function ForgotPassword() {
+const ForgotPassword = () => {
   const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -129,3 +130,5 @@ export default function ForgotPassword() {
     </div>
   )
 }
+
+export default ForgotPassword

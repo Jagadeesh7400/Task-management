@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect, useCallback, createContext, useContext } from "react"
@@ -49,7 +50,7 @@ export const AuthProvider = ({ children, setAuthStatus }) => {
 
   const register = useCallback(async (name, email, password) => {
     try {
-      const response = await api.post("/auth/register", { name, email, password })
+      const response = await api.post("/api/auth/register", { name, email, password })
       return response.data
     } catch (error) {
       console.error("Registration error:", error)
@@ -59,7 +60,7 @@ export const AuthProvider = ({ children, setAuthStatus }) => {
 
   const verifyEmail = useCallback(async (token) => {
     try {
-      const response = await api.get(`/auth/verify-email/${token}`)
+      const response = await api.get(`/api/auth/verify-email/${token}`)
       localStorage.setItem("token", response.data.token)
       localStorage.setItem("user", JSON.stringify(response.data.user))
       setUser(response.data.user)
@@ -74,14 +75,15 @@ export const AuthProvider = ({ children, setAuthStatus }) => {
 
   const login = useCallback(async (email, password) => {
     try {
-      const response = await api.post("/auth/login", { email, password })
+      const response = await api.post("/api/auth/login", { email, password })
 
       api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`
 
       localStorage.setItem("token", response.data.token)
       localStorage.setItem("user", JSON.stringify(response.data.user))
 
-      setUser(response.data.user)
+      // Include socialLinks in the user object
+      setUser(response.data.user);
       setAuthStatus(true, response.data.user.role)
       return response.data.user
     } catch (error) {
@@ -92,7 +94,7 @@ export const AuthProvider = ({ children, setAuthStatus }) => {
 
   const logout = useCallback(async () => {
     try {
-      await api.post("/auth/logout")
+      await api.post("/api/auth/logout")
 
       localStorage.removeItem("token")
       localStorage.removeItem("user")
@@ -110,7 +112,7 @@ export const AuthProvider = ({ children, setAuthStatus }) => {
 
   const forgotPassword = useCallback(async (email) => {
     try {
-      const response = await api.post("/auth/forgot-password", { email })
+      const response = await api.post("/api/auth/forgot-password", { email })
       return response.data
     } catch (error) {
       console.error("Forgot password error:", error)
@@ -120,7 +122,7 @@ export const AuthProvider = ({ children, setAuthStatus }) => {
 
   const resetPassword = useCallback(async (token, password) => {
     try {
-      const response = await api.post("/auth/reset-password", { token, password })
+      const response = await api.post("/api/auth/reset-password", { token, password })
       return response.data
     } catch (error) {
       console.error("Reset password error:", error)
@@ -130,7 +132,7 @@ export const AuthProvider = ({ children, setAuthStatus }) => {
 
   const updateProfile = useCallback(async (profileData) => {
     try {
-      const response = await api.put("/users/profile", profileData)
+      const response = await api.put("/api/users/profile", profileData)
 
       const updatedUser = response.data
       localStorage.setItem("user", JSON.stringify(updatedUser))

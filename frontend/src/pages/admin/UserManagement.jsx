@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from "react"
@@ -30,6 +31,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import "@/styles/admin.css"
+import { useAuth } from "@/hooks/useAuth"
+import { toast } from "react-hot-toast";
 
 export default function UserManagement() {
   const { getUsers, deleteUser } = useAdmin()
@@ -40,6 +43,7 @@ export default function UserManagement() {
   const [sortBy, setSortBy] = useState("createdAt")
   const [sortOrder, setSortOrder] = useState("desc")
   const [confirmDelete, setConfirmDelete] = useState(null)
+  const { user } = useAuth();
 
   const fetchUsers = async () => {
     setIsLoading(true)
@@ -70,8 +74,10 @@ export default function UserManagement() {
       await deleteUser(userId)
       setUsers(users.filter((user) => user.id !== userId))
       setConfirmDelete(null)
+      toast.success("User deleted successfully")
     } catch (error) {
       console.error("Error deleting user:", error)
+      toast.error("Error deleting user")
     }
   }
 
@@ -122,7 +128,7 @@ export default function UserManagement() {
               <Filter className="h-4 w-4 text-dark-color dark:text-light-color opacity-60" />
               <Select
                 value={roleFilter}
-                onChange={(e) => setRoleFilter(e.target.value)}
+                onValueChange={(value) => setRoleFilter(value)}
                 className="text-sm glass dark:bg-dark-color dark:bg-opacity-50 border border-white border-opacity-20 rounded px-2 py-1 text-dark-color dark:text-light-color"
               >
                 <SelectTrigger>
@@ -140,7 +146,7 @@ export default function UserManagement() {
               <span className="text-sm text-dark-color dark:text-light-color">Sort by:</span>
               <Select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
+                onValueChange={(value) => setSortBy(value)}
                 className="text-sm glass dark:bg-dark-color dark:bg-opacity-50 border border-white border-opacity-20 rounded px-2 py-1 text-dark-color dark:text-light-color"
               >
                 <SelectTrigger>
@@ -242,6 +248,7 @@ export default function UserManagement() {
                         {new Date(user.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                       {user?.role === 'admin' && (
                         <div className="flex justify-end space-x-2">
                           <Link
                             to={`/admin/users/${user.id}/edit`}
@@ -269,6 +276,7 @@ export default function UserManagement() {
                             </AlertDialogContent>
                           </AlertDialog>
                         </div>
+                         )}
                       </TableCell>
                     </TableRow>
                   ))
