@@ -11,7 +11,8 @@ import TaskBoard from "@/components/tasks/TaskBoard"
 import Profile from "@/pages/Profile"
 import AdminDashboard from "@/pages/admin/AdminDashboard"
 import UserManagement from "@/pages/admin/UserManagement"
-import UserEdit from "@/pages/admin/UserEdit" // Missing Import
+import ManageTeamsPage from "@/pages/admin/ManageTeamsPage"
+import UserEdit from "@/pages/admin/UserEdit"
 import Unauthorized from "@/pages/Unauthorized"
 import { checkApiAvailability } from "@/services/api"
 import LoadingScreen from "@/components/ui/LoadingScreen"
@@ -20,7 +21,6 @@ import ProtectedRoute from "@/components/auth/ProtectedRoute"
 import TasksPage from "@/pages/TasksPage"
 import MeetingsPage from "@/pages/MeetingsPage"
 import TeamsPage from "@/pages/TeamsPage"
-import ManageTeamsPage from "@/pages/admin/ManageTeamsPage"
 
 import "@/styles/main.css"
 import "@/styles/index.css"
@@ -106,46 +106,43 @@ const App = () => {
             <Route path="teams" element={<TeamsPage />} />
 
             {/* Admin routes */}
-            {userRole === "admin" ? (
-              <Route path="admin">
-                <Route index element={<AdminDashboard />} />
-                <Route path="dashboard" element={<AdminDashboard />} />
-                <Route
-                  path="users"
-                  element={
-                    <ProtectedRoute requireAdmin={true}>
-                      <UserManagement />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="users/:id/edit"
-                  element={
-                    <ProtectedRoute requireAdmin={true}>
-                      <UserEdit />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="users/new"
-                  element={
-                    <ProtectedRoute requireAdmin={true}>
-                      <UserEdit />
-                    </ProtectedRoute>
-                  }
-                />
-                                <Route
-                  path="teams"
-                  element={
-                    <ProtectedRoute requireAdmin={true}>
-                      <ManageTeamsPage />
-                    </ProtectedRoute>
-                  }
-                />
-              </Route>
-            ) : (
-              <Route path="admin/*" element={<Navigate to="/unauthorized" />} />
-            )}
+            <Route path="admin">
+              <Route index element={<AdminDashboard />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route
+                path="users"
+                element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <UserManagement />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="users/:id/edit"
+                element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <UserEdit />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="users/new"
+                element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <UserEdit />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="teams"
+                element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <ManageTeamsPage />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+             <Route path="admin/*" element={<Navigate to="/unauthorized" />} />
           </Route>
 
           {/* Fallback route */}

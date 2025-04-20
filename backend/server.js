@@ -28,6 +28,7 @@ const { Server } = require("socket.io");
 dotenv.config();
 
 // Create Express app
+console.log('Attempting to load env variables', process.env)
 const app = express();
 const server = http.createServer(app);  // Create HTTP server
 const io = new Server(server,{
