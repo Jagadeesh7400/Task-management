@@ -13,6 +13,7 @@ const teamRoutes = require("./routes/teamRoutes");
 const { authenticateToken } = require("./middleware/authMiddleware");
 const { startReminderService } = require('./services/reminderService');
 const { deleteOldLogs } = require('./services/auditService');
+const { v4: uuidv4 } = require('uuid');
 
 //Websocket requirements
 

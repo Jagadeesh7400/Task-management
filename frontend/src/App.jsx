@@ -23,6 +23,14 @@ import TeamsPage from "@/pages/TeamsPage"
 import ManageTeamsPage from "@/pages/admin/ManageTeamsPage"
 
 import "@/styles/main.css"
+import "@/styles/index.css"
+import "@/styles/layout.css"
+import "@/styles/tasks.css"
+import "@/styles/admin.css"
+import "@/styles/auth.css"
+import "@/styles/profile.css"
+import "@/styles/meetings.css"
+
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn") === "true")
@@ -81,25 +89,69 @@ const App = () => {
           <Route path="/verify-email/:token" element={<VerifyEmail demoMode={demoMode} />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* Protected routes - Wrap everything in ProtectedRoute */}
-          <Route path="/" element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
-              <Route index element={<Navigate to="/dashboard" />} />
-              <Route path="dashboard" element={<TaskBoard />} />
-              <Route path="tasks" element={<TasksPage />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="meetings" element={<MeetingsPage />} />
-              <Route path="teams" element={<TeamsPage />} />
-              <Route path="admin/users/:id/edit" element={<UserEdit />} />
-              {/*  Example of Admin Route (you'll likely need a separate component and role-based protection)
-               <Route path="admin" element={<AdminDashboard />} /> 
-              */}
+          {/* Protected routes */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <MainLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="/dashboard" />} />
+            <Route path="dashboard" element={<TaskBoard />} />
+            <Route path="tasks" element={<TasksPage />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="meetings" element={<MeetingsPage />} />
+            <Route path="teams" element={<TeamsPage />} />
+
+            {/* Admin routes */}
+            {userRole === "admin" ? (
+              <Route path="admin">
+                <Route index element={<AdminDashboard />} />
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route
+                  path="users"
+                  element={
+                    <ProtectedRoute requireAdmin={true}>
+                      <UserManagement />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="users/:id/edit"
+                  element={
+                    <ProtectedRoute requireAdmin={true}>
+                      <UserEdit />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="users/new"
+                  element={
+                    <ProtectedRoute requireAdmin={true}>
+                      <UserEdit />
+                    </ProtectedRoute>
+                  }
+                />
+                                <Route
+                  path="teams"
+                  element={
+                    <ProtectedRoute requireAdmin={true}>
+                      <ManageTeamsPage />
+                    </ProtectedRoute>
+                  }
+                />
+              </Route>
+            ) : (
+              <Route path="admin/*" element={<Navigate to="/unauthorized" />} />
+            )}
           </Route>
-        </Routes>  
-          {/* Catch-all route for 404 - Not Found  (Keep this at the end)*/}
-          {/* <Route path="*" element={<NotFound />} /> */} 
-        
-        </Router>
-        
+
+          {/* Fallback route */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
     </AuthProvider>
   )
 }
