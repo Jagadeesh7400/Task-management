@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from "react"
@@ -6,8 +5,8 @@ import { useParams, useNavigate, Link } from "react-router-dom"
 import { CheckCircle, XCircle, ArrowLeft } from "lucide-react"
 import ZidioLogo from "@/components/ui/ZidioLogo"
 import { useAuth } from "@/hooks/useAuth"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import  { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import  Button  from "@/components/ui/button"
 import "@/styles/auth.css"
 
 export default function VerifyEmail() {

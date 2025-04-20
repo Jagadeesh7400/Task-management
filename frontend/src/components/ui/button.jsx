@@ -5,5 +5,6 @@ const Button = () => {
     <div>Placeholder Button</div>
   );
 };
-export { Button };
+
 export default Button;
+export { Button };

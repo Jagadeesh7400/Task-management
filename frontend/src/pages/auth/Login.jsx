@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from "react"
@@ -8,9 +7,9 @@ import ZidioLogo from "@/components/ui/ZidioLogo"
 import { useAuth } from "@/hooks/useAuth"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
+import  Button  from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
+import  Checkbox  from "@/components/ui/checkbox"
 import "@/styles/auth.css"
 
 const Login = () => {
