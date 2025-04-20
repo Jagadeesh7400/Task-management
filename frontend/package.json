@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@eslint/js": "^9.21.0",
+    "@hookform/resolvers": "^5.0.1",
     "@jitsi/react-sdk": "*",
     "@reduxjs/toolkit": "*",
     "@tailwindcss/vite": "^4.0.14",
@@ -31,7 +32,8 @@
     "react-hook-form": "^7.55.0",
     "react-hot-toast": "^2.5.2",
     "react-redux": "*",
-    "react-router-dom": "^7.3.0"
+    "react-router-dom": "^7.3.0",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

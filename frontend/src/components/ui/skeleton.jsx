@@ -1,15 +1,7 @@
-"use client"
+import React from 'react';
 
-import * as React from "react"
-import { cn } from "@/lib/utils"
+const Skeleton = () => {
+  return <div />;
+};
 
-const Skeleton = React.forwardRef(
-  ({ className, ...props }, ref) => {
-    return (
-      
-    )
-  }
-)
-Skeleton.displayName = "Skeleton"
-
-export { Skeleton }
+export { Skeleton };
