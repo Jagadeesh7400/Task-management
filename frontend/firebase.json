@@ -1,0 +1,27 @@
+{
+  "hosting": {
+    "public": "dist", // Firebase serves files from the "dist" directory after the build
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html" // All requests are routed to index.html for SPA routing
+      }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=31536000" // Cache static assets for a year
+          }
+        ]
+      }
+    ]
+  }
+}

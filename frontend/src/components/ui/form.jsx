@@ -7,5 +7,12 @@ const Form = () => {
     </div>
   );
 };
-export { Form };
+
+const FormControl = ({ children }) => <div>{children}</div>;
+const FormField = ({ children }) => <div>{children}</div>;
+const FormItem = ({ children }) => <div>{children}</div>;
+const FormLabel = ({ children }) => <div>{children}</div>;
+const FormMessage = ({ children }) => <div>{children}</div>;
+
+export { Form, FormControl, FormField, FormItem, FormLabel, FormMessage };
 export default Form;

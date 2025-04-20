@@ -81,24 +81,25 @@ const App = () => {
           <Route path="/verify-email/:token" element={<VerifyEmail demoMode={demoMode} />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* Protected routes */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <MainLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<Navigate to="/dashboard" />} />
-            <Route path="dashboard" element={<TaskBoard />} />
-            <Route path="tasks" element={<TasksPage />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="meetings" element={<MeetingsPage />} />
-            <Route path="teams" element={<TeamsPage />} />
-            <Route path="admin/users/:id/edit" element={<UserEdit />} />
-          </Routes>
+          {/* Protected routes - Wrap everything in ProtectedRoute */}
+          <Route path="/" element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
+              <Route index element={<Navigate to="/dashboard" />} />
+              <Route path="dashboard" element={<TaskBoard />} />
+              <Route path="tasks" element={<TasksPage />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="meetings" element={<MeetingsPage />} />
+              <Route path="teams" element={<TeamsPage />} />
+              <Route path="admin/users/:id/edit" element={<UserEdit />} />
+              {/*  Example of Admin Route (you'll likely need a separate component and role-based protection)
+               <Route path="admin" element={<AdminDashboard />} /> 
+              */}
+          </Route>
+        </Routes>  
+          {/* Catch-all route for 404 - Not Found  (Keep this at the end)*/}
+          {/* <Route path="*" element={<NotFound />} /> */} 
+        
         </Router>
+        
     </AuthProvider>
   )
 }

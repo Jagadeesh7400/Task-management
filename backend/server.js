@@ -1,3 +1,4 @@
+
 const express = require("express");
 const cron = require('node-cron');
 const mongoose = require("mongoose");
@@ -13,6 +14,11 @@ const { authenticateToken } = require("./middleware/authMiddleware");
 const { startReminderService } = require('./services/reminderService');
 const { deleteOldLogs } = require('./services/auditService');
 
+//Websocket requirements
+
+const http = require("http");
+const { Server } = require("socket.io");
+
 /**
  * @fileOverview Main server file.
  */
@@ -22,6 +28,13 @@ dotenv.config();
 
 // Create Express app
 const app = express();
+const server = http.createServer(app);  // Create HTTP server
+const io = new Server(server,{
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});  // Integrate Socket.IO
 
 // Middleware
 app.use(cors());
@@ -51,7 +64,7 @@ app.use((err, req, res, next) => {
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
@@ -66,4 +79,27 @@ cron.schedule('0 0 * * *', async () => {
   } catch (error) {
     console.error('Error cleaning up old audit logs:', error);
   }
+});
+
+// WebSockets
+
+io.on("connection", (socket) => {
+  console.log("A user connected:", socket.id);
+
+  socket.on("join-room", (roomId, userId) => {
+    socket.join(roomId);
+    socket.to(roomId).emit("user-connected", userId);
+  });
+
+  socket.on("sending-signal", ({ userId, signal }) => {
+    socket.to(userId).emit("receiving-returned-signal", { signal, id: socket.id });
+  });
+
+  socket.on("returning-signal", (payload) => {
+    socket.to(payload.callerID).emit("receiving-signal", { signal: payload.signal, id: socket.id });
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
 });
