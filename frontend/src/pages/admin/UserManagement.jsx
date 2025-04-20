@@ -34,6 +34,7 @@ import {
 import "@/styles/admin.css"
 import { useAuth } from "@/hooks/useAuth"
 import { toast } from "react-hot-toast";
+import UserEdit from "@/pages/admin/UserEdit";
 
 export default function UserManagement() {
   const { getUsers, deleteUser } = useAdmin()
