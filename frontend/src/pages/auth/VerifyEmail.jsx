@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
-import { CheckCircle, XCircle } from "lucide-react"
+import { CheckCircle, XCircle, ArrowLeft } from "lucide-react"
 import ZidioLogo from "@/components/ui/ZidioLogo"
 import { useAuth } from "@/hooks/useAuth"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import "@/styles/auth.css"
 
 export default function VerifyEmail() {
   const { token } = useParams()
@@ -38,11 +39,11 @@ export default function VerifyEmail() {
     }
 
     verify()
-  }, [token, verifyEmail])
+  }, [token, verifyEmail, navigate])
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-color to-secondary-color dark:from-dark-color dark:to-primary-color p-4">
-      <div className="w-full max-w-md animate-slide-up">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-color to-secondary-color dark:from-dark-color dark:to-primary-color p-4 animate-slide-up">
+      <div className="w-full max-w-md">
         <Card className="bg-white dark:bg-dark-color dark:bg-opacity-80 rounded-lg shadow-xl overflow-hidden">
           <CardHeader className="flex flex-col items-center">
             <ZidioLogo className="h-12 w-12 mb-4" />

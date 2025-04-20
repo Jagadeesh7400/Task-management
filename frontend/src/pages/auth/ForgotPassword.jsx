@@ -9,14 +9,15 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import "@/styles/auth.css"
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
-  const navigate = useNavigate()
 
+  const navigate = useNavigate()
   const { forgotPassword } = useAuth()
 
   const handleSubmit = async (e) => {
@@ -40,10 +41,8 @@ export default function ForgotPassword() {
         <Card className="bg-white dark:bg-dark-color dark:bg-opacity-80 rounded-lg shadow-xl overflow-hidden">
           <CardHeader className="flex flex-col items-center">
             <ZidioLogo className="h-12 w-12 mb-4" />
-            <CardTitle className="text-2xl font-bold text-center text-primary-color dark:text-secondary-color">
-              Forgot Password
-            </CardTitle>
-            <CardDescription className="text-center text-gray-600 dark:text-gray-300 mb-4">
+            <CardTitle className="text-2xl font-bold text-center text-primary-color dark:text-secondary-color">Forgot Password</CardTitle>
+            <CardDescription className="text-center text-gray-600 dark:text-gray-300 mb-6">
               Enter your email and we'll send you a link to reset your password
             </CardDescription>
           </CardHeader>
@@ -71,9 +70,7 @@ export default function ForgotPassword() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-3 py-2 border border-ade8f4 dark:border-023e8a rounded-md 
-                      focus:outline-none focus:ring-2 focus:ring-0077b6 dark:focus:ring-48cae4
-                      bg-white dark:bg-03045e text-0077b6 dark:text-white"
+                    className="w-full"
                     placeholder="your@email.com"
                   />
                 </div>

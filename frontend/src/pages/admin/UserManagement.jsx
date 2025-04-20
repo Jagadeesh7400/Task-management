@@ -29,6 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import "@/styles/admin.css"
 
 export default function UserManagement() {
   const { getUsers, deleteUser } = useAdmin()
@@ -157,6 +158,8 @@ export default function UserManagement() {
                 onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
                 variant="ghost"
                 size="icon"
+                className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg text-dark-color dark:text-light-color hover:bg-white hover:bg-opacity-10 transition-colors"
+                title="Refresh"
               >
                 {sortOrder === "asc" ? "↑" : "↓"}
               </Button>
