@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react"
 import { Edit, Trash, Search, UserPlus, Filter, RefreshCw } from "lucide-react"
 import { useAdmin } from "@/hooks/useAdmin"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -19,7 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog" //Fixed Import Path
+} from "@/components/ui/alert-dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   Table,
@@ -38,7 +38,6 @@ import UserEdit from "@/pages/admin/UserEdit";
 
 export default function UserManagement() {
   const { getUsers, deleteUser } = useAdmin()
-    const navigate = useNavigate();
   const [users, setUsers] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
@@ -73,11 +72,6 @@ export default function UserManagement() {
   }
 
   const handleDeleteUser = async (userId) => {
-      if (user?.role !== 'admin') {
-        toast.error("You are not authorized to perform this action.");
-        return;
-      }
-
     try {
       await deleteUser(userId)
       setUsers(users.filter((user) => user.id !== userId))
