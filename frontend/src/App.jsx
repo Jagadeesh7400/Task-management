@@ -23,14 +23,6 @@ import TeamsPage from "@/pages/TeamsPage"
 import ManageTeamsPage from "@/pages/admin/ManageTeamsPage"
 
 import "@/styles/main.css"
-import "@/styles/index.css"
-import "@/styles/layout.css"
-import "@/styles/tasks.css"
-import "@/styles/admin.css"
-import "@/styles/auth.css"
-import "@/styles/profile.css"
-import "@/styles/meetings.css"
-
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn") === "true")
@@ -104,54 +96,9 @@ const App = () => {
             <Route path="profile" element={<Profile />} />
             <Route path="meetings" element={<MeetingsPage />} />
             <Route path="teams" element={<TeamsPage />} />
-
-            {/* Admin routes */}
-            {userRole === "admin" ? (
-              <Route path="admin">
-                <Route index element={<AdminDashboard />} />
-                <Route path="dashboard" element={<AdminDashboard />} />
-                <Route
-                  path="users"
-                  element={
-                    <ProtectedRoute requireAdmin={true}>
-                      <UserManagement />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="users/:id/edit"
-                  element={
-                    <ProtectedRoute requireAdmin={true}>
-                      <UserEdit />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="users/new"
-                  element={
-                    <ProtectedRoute requireAdmin={true}>
-                      <UserEdit />
-                    </ProtectedRoute>
-                  }
-                />
-                                <Route
-                  path="teams"
-                  element={
-                    <ProtectedRoute requireAdmin={true}>
-                      <ManageTeamsPage />
-                    </ProtectedRoute>
-                  }
-                />
-              </Route>
-            ) : (
-              <Route path="admin/*" element={<Navigate to="/unauthorized" />} />
-            )}
-          </Route>
-
-          {/* Fallback route */}
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </Router>
+            <Route path="admin/users/:id/edit" element={<UserEdit />} />
+          </Routes>
+        </Router>
     </AuthProvider>
   )
 }
