@@ -1,17 +1,21 @@
 "use client"
 
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { ArrowLeft, Send } from "lucide-react"
 import ZidioLogo from "@/components/ui/ZidioLogo"
 import { useAuth } from "@/hooks/useAuth"
-import "@/styles/auth.css"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
+  const navigate = useNavigate()
 
   const { forgotPassword } = useAuth()
 
@@ -31,19 +35,20 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-caf0f8 to-0077b6 dark:from-023e8a dark:to-03045e p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-color to-secondary-color dark:from-dark-color dark:to-primary-color p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white dark:bg-03045e rounded-lg shadow-xl overflow-hidden">
-          <div className="p-6 sm:p-8">
-            <div className="flex justify-center mb-8">
-              <ZidioLogo className="h-12 w-12" />
-            </div>
-
-            <h2 className="text-2xl font-bold text-center text-0077b6 dark:text-48cae4 mb-2">Forgot Password</h2>
-            <p className="text-center text-gray-600 dark:text-gray-300 mb-6">
+        <Card className="bg-white dark:bg-dark-color dark:bg-opacity-80 rounded-lg shadow-xl overflow-hidden">
+          <CardHeader className="flex flex-col items-center">
+            <ZidioLogo className="h-12 w-12 mb-4" />
+            <CardTitle className="text-2xl font-bold text-center text-primary-color dark:text-secondary-color">
+              Forgot Password
+            </CardTitle>
+            <CardDescription className="text-center text-gray-600 dark:text-gray-300 mb-4">
               Enter your email and we'll send you a link to reset your password
-            </p>
+            </CardDescription>
+          </CardHeader>
 
+          <CardContent className="p-6 sm:p-8">
             {error && <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">{error}</div>}
 
             {success ? (
@@ -51,18 +56,16 @@ export default function ForgotPassword() {
                 <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
                   Password reset link has been sent to your email.
                 </div>
-                <Link to="/login" className="inline-flex items-center text-0077b6 dark:text-48cae4 hover:underline">
+                <Link to="/login" className="inline-flex items-center text-primary-color dark:text-secondary-color hover:underline">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back to login
                 </Link>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-0077b6 dark:text-48cae4 mb-1">
-                    Email
-                  </label>
-                  <input
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
                     id="email"
                     type="email"
                     value={email}
@@ -75,7 +78,7 @@ export default function ForgotPassword() {
                   />
                 </div>
 
-                <button
+                <Button
                   type="submit"
                   disabled={isLoading}
                   className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md 
@@ -113,18 +116,18 @@ export default function ForgotPassword() {
                       Send Reset Link
                     </span>
                   )}
-                </button>
+                </Button>
 
                 <div className="text-center">
-                  <Link to="/login" className="inline-flex items-center text-0077b6 dark:text-48cae4 hover:underline">
+                  <Link to="/login" className="inline-flex items-center text-primary-color dark:text-secondary-color hover:underline">
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back to login
                   </Link>
                 </div>
               </form>
             )}
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

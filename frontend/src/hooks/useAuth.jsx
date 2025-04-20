@@ -45,7 +45,7 @@ export const AuthProvider = ({ children, setAuthStatus }) => {
     }
 
     checkAuth()
-  }, [])
+  }, [setAuthStatus])
 
   const register = useCallback(async (name, email, password) => {
     try {

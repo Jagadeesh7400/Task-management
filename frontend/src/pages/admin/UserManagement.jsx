@@ -4,7 +4,31 @@ import { useState, useEffect } from "react"
 import { Edit, Trash, Search, UserPlus, Filter, RefreshCw } from "lucide-react"
 import { useAdmin } from "@/hooks/useAdmin"
 import { Link } from "react-router-dom"
-import "@/styles/admin.css"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 export default function UserManagement() {
   const { getUsers, deleteUser } = useAdmin()
@@ -76,7 +100,7 @@ export default function UserManagement() {
       <div className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-4 md:p-6 animate-slide-up">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
           <form onSubmit={handleSearch} className="relative w-full md:w-64">
-            <input
+            <Input
               type="text"
               placeholder="Search users..."
               value={searchQuery}
@@ -87,53 +111,66 @@ export default function UserManagement() {
                 text-dark-color dark:text-light-color transition-all"
             />
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-dark-color dark:text-light-color opacity-60" />
-            <button type="submit" className="hidden">
+            <Button type="submit" className="hidden">
               Search
-            </button>
+            </Button>
           </form>
 
           <div className="flex flex-wrap gap-2">
             <div className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg p-2 flex items-center gap-2">
               <Filter className="h-4 w-4 text-dark-color dark:text-light-color opacity-60" />
-              <select
+              <Select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value)}
                 className="text-sm glass dark:bg-dark-color dark:bg-opacity-50 border border-white border-opacity-20 rounded px-2 py-1 text-dark-color dark:text-light-color"
               >
-                <option value="all">All Roles</option>
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
-              </select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Roles</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="user">User</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg p-2 flex items-center gap-2">
               <span className="text-sm text-dark-color dark:text-light-color">Sort by:</span>
-              <select
+              <Select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 className="text-sm glass dark:bg-dark-color dark:bg-opacity-50 border border-white border-opacity-20 rounded px-2 py-1 text-dark-color dark:text-light-color"
               >
-                <option value="name">Name</option>
-                <option value="email">Email</option>
-                <option value="createdAt">Date Created</option>
-                <option value="taskCount">Task Count</option>
-              </select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a sort" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="name">Name</SelectItem>
+                  <SelectItem value="email">Email</SelectItem>
+                  <SelectItem value="createdAt">Date Created</SelectItem>
+                  <SelectItem value="taskCount">Task Count</SelectItem>
+                </SelectContent>
+              </Select>
 
-              <button
+              <Button
                 onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-                className="text-sm glass dark:bg-dark-color dark:bg-opacity-50 border border-white border-opacity-20 rounded px-2 py-1 text-dark-color dark:text-light-color"
+                variant="ghost"
+                size="icon"
               >
                 {sortOrder === "asc" ? "↑" : "↓"}
-              </button>
+              </Button>
             </div>
 
-            <button
+            <Button
               onClick={fetchUsers}
-              className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg p-2 text-dark-color dark:text-light-color hover:bg-white hover:bg-opacity-10 transition-colors"
+              variant="ghost"
+              size="icon"
+              className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg text-dark-color dark:text-light-color hover:bg-white hover:bg-opacity-10 transition-colors"
               title="Refresh"
             >
               <RefreshCw className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -143,34 +180,34 @@ export default function UserManagement() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-white divide-opacity-20">
-              <thead>
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-dark-color dark:text-light-color opacity-70 uppercase tracking-wider">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="px-4 py-3 text-left text-xs font-medium text-dark-color dark:text-light-color opacity-70 uppercase tracking-wider">
                     User
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-dark-color dark:text-light-color opacity-70 uppercase tracking-wider">
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-left text-xs font-medium text-dark-color dark:text-light-color opacity-70 uppercase tracking-wider">
                     Email
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-dark-color dark:text-light-color opacity-70 uppercase tracking-wider">
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-left text-xs font-medium text-dark-color dark:text-light-color opacity-70 uppercase tracking-wider">
                     Role
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-dark-color dark:text-light-color opacity-70 uppercase tracking-wider">
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-left text-xs font-medium text-dark-color dark:text-light-color opacity-70 uppercase tracking-wider">
                     Tasks
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-dark-color dark:text-light-color opacity-70 uppercase tracking-wider">
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-left text-xs font-medium text-dark-color dark:text-light-color opacity-70 uppercase tracking-wider">
                     Created
-                  </th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-dark-color dark:text-light-color opacity-70 uppercase tracking-wider">
+                  </TableHead>
+                  <TableHead className="px-4 py-3 text-right text-xs font-medium text-dark-color dark:text-light-color opacity-70 uppercase tracking-wider">
                     Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white divide-opacity-10">
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {filteredUsers.length > 0 ? (
                   filteredUsers.map((user) => (
-                    <tr key={user.id} className="hover:bg-white hover:bg-opacity-5 transition-colors">
-                      <td className="px-4 py-3 whitespace-nowrap">
+                    <TableRow key={user.id} className="hover:bg-white hover:bg-opacity-5 transition-colors">
+                      <TableCell className="px-4 py-3 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="flex-shrink-0 h-8 w-8 rounded-full glass flex items-center justify-center text-primary-color dark:text-secondary-color font-medium">
                             {user.name.charAt(0)}
@@ -179,11 +216,11 @@ export default function UserManagement() {
                             <p className="text-sm font-medium text-dark-color dark:text-light-color">{user.name}</p>
                           </div>
                         </div>
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-dark-color dark:text-light-color opacity-80">
+                      </TableCell>
+                      <TableCell className="px-4 py-3 whitespace-nowrap text-sm text-dark-color dark:text-light-color opacity-80">
                         {user.email}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
+                      </TableCell>
+                      <TableCell className="px-4 py-3 whitespace-nowrap">
                         <span
                           className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
                           ${
@@ -194,14 +231,14 @@ export default function UserManagement() {
                         >
                           {user.role}
                         </span>
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-dark-color dark:text-light-color opacity-80">
+                      </TableCell>
+                      <TableCell className="px-4 py-3 whitespace-nowrap text-sm text-dark-color dark:text-light-color opacity-80">
                         {user.taskCount || 0}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-dark-color dark:text-light-color opacity-80">
+                      </TableCell>
+                      <TableCell className="px-4 py-3 whitespace-nowrap text-sm text-dark-color dark:text-light-color opacity-80">
                         {new Date(user.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                      </TableCell>
+                      <TableCell className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-end space-x-2">
                           <Link
                             to={`/admin/users/${user.id}/edit`}
@@ -209,59 +246,41 @@ export default function UserManagement() {
                           >
                             <Edit className="h-4 w-4" />
                           </Link>
-                          <button
-                            onClick={() => setConfirmDelete(user.id)}
-                            className="text-danger-color hover:text-red-700 transition-colors"
-                          >
-                            <Trash className="h-4 w-4" />
-                          </button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="ghost" className="text-danger-color hover:text-red-700 transition-colors">
+                                <Trash className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This action cannot be undone and will also delete all tasks associated with this user.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleDeleteUser(user.id)}>Delete</AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </div>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ))
                 ) : (
-                  <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-dark-color dark:text-light-color opacity-60">
+                  <TableRow>
+                    <TableCell colSpan={6} className="px-4 py-8 text-center text-dark-color dark:text-light-color opacity-60">
                       No users found
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 )}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
       </div>
-
-      {/* Delete Confirmation Modal */}
-      {confirmDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 animate-fade-in">
-          <div className="glass dark:bg-dark-color dark:bg-opacity-90 rounded-lg shadow-xl w-full max-w-md animate-slide-up">
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-danger-color mb-4">Confirm Deletion</h3>
-              <p className="text-dark-color dark:text-light-color mb-6">
-                Are you sure you want to delete this user? This action cannot be undone and will also delete all tasks
-                associated with this user.
-              </p>
-              <div className="flex justify-end space-x-3">
-                <button
-                  onClick={() => setConfirmDelete(null)}
-                  className="px-4 py-2 glass border border-white border-opacity-20 rounded-md
-                  text-dark-color dark:text-light-color hover:bg-white hover:bg-opacity-10 transition-all"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => handleDeleteUser(confirmDelete)}
-                  className="px-4 py-2 bg-danger-color text-white rounded-md hover:bg-red-700
-                  transition-all hover:-translate-y-1"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

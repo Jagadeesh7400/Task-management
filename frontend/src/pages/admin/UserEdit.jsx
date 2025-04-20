@@ -4,7 +4,35 @@ import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { ArrowLeft, Save } from "lucide-react"
 import { useAdmin } from "@/hooks/useAdmin"
-import "@/styles/admin.css"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { toast } from "react-hot-toast"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  email: z.string().email({
+    message: "Please enter a valid email address.",
+  }),
+  role: z.enum(["user", "admin"]).default("user"),
+  occupation: z.string().optional(),
+  location: z.string().optional(),
+  bio: z.string().optional(),
+})
 
 export default function UserEdit() {
   const { id } = useParams()
@@ -14,13 +42,17 @@ export default function UserEdit() {
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    role: "user",
-    occupation: "",
-    location: "",
-    bio: "",
+
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      role: "user",
+      occupation: "",
+      location: "",
+      bio: "",
+    },
   })
 
   useEffect(() => {
@@ -28,47 +60,34 @@ export default function UserEdit() {
       setIsLoading(true)
       try {
         const userData = await getUser(id)
-        setFormData({
-          name: userData.name || "",
-          email: userData.email || "",
-          role: userData.role || "user",
-          occupation: userData.occupation || "",
-          location: userData.location || "",
-          bio: userData.bio || "",
-        })
+        form.reset(userData)
       } catch (error) {
         console.error("Error fetching user:", error)
         setError("Failed to load user data")
+        toast.error("Failed to load user data")
       } finally {
         setIsLoading(false)
       }
     }
 
     fetchUser()
-  }, [id, getUser])
+  }, [id, getUser, form])
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  async function onSubmit(values) {
     setError("")
     setSuccess("")
     setIsSaving(true)
 
     try {
-      await updateUser(id, formData)
+      await updateUser(id, values)
       setSuccess("User updated successfully")
+      toast.success("User updated successfully")
       setTimeout(() => {
         navigate("/admin/users")
       }, 2000)
     } catch (err) {
       setError(err.message || "Failed to update user")
+      toast.error(err.message || "Failed to update user")
     } finally {
       setIsSaving(false)
     }
@@ -96,195 +115,160 @@ export default function UserEdit() {
 
       <div className="glass dark:bg-dark-color dark:bg-opacity-50 rounded-lg shadow-lg border border-white border-opacity-20 p-6 animate-slide-up">
         {error && (
-          <div className="mb-6 p-4 bg-danger-color bg-opacity-10 border border-danger-color border-opacity-20 text-danger-color rounded-lg animate-shake">
+          <div className="mb-6 p-4 bg-destructive/10 border border-destructive text-destructive rounded-lg animate-shake">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="mb-6 p-4 bg-success-color bg-opacity-10 border border-success-color border-opacity-20 text-success-color rounded-lg animate-slide-up">
+          <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg animate-slide-up">
             {success}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="group">
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-dark-color dark:text-light-color mb-1 group-hover:text-primary-color dark:group-hover:text-secondary-color transition-colors"
-              >
-                Full Name *
-              </label>
-              <input
-                id="name"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
                 name="name"
-                type="text"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                className="w-full px-3 py-2 glass dark:bg-dark-color dark:bg-opacity-50
-                border border-white border-opacity-20 rounded-md 
-                focus:outline-none focus:ring-2 focus:ring-primary-color dark:focus:ring-secondary-color
-                text-dark-color dark:text-light-color transition-all"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full Name *</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Full Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            <div className="group">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-dark-color dark:text-light-color mb-1 group-hover:text-primary-color dark:group-hover:text-secondary-color transition-colors"
-              >
-                Email *
-              </label>
-              <input
-                id="email"
+              <FormField
+                control={form.control}
                 name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="w-full px-3 py-2 glass dark:bg-dark-color dark:bg-opacity-50
-                border border-white border-opacity-20 rounded-md 
-                focus:outline-none focus:ring-2 focus:ring-primary-color dark:focus:ring-secondary-color
-                text-dark-color dark:text-light-color transition-all"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email *</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Email" {...field} disabled />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            <div className="group">
-              <label
-                htmlFor="role"
-                className="block text-sm font-medium text-dark-color dark:text-light-color mb-1 group-hover:text-primary-color dark:group-hover:text-secondary-color transition-colors"
-              >
-                Role *
-              </label>
-              <select
-                id="role"
+              <FormField
+                control={form.control}
                 name="role"
-                value={formData.role}
-                onChange={handleChange}
-                required
-                className="w-full px-3 py-2 glass dark:bg-dark-color dark:bg-opacity-50
-                border border-white border-opacity-20 rounded-md 
-                focus:outline-none focus:ring-2 focus:ring-primary-color dark:focus:ring-secondary-color
-                text-dark-color dark:text-light-color transition-all"
-              >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-              </select>
-            </div>
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Role *</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="user">User</SelectItem>
+                        <SelectItem value="admin">Admin</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <div className="group">
-              <label
-                htmlFor="occupation"
-                className="block text-sm font-medium text-dark-color dark:text-light-color mb-1 group-hover:text-primary-color dark:group-hover:text-secondary-color transition-colors"
-              >
-                Occupation
-              </label>
-              <input
-                id="occupation"
+              <FormField
+                control={form.control}
                 name="occupation"
-                type="text"
-                value={formData.occupation}
-                onChange={handleChange}
-                className="w-full px-3 py-2 glass dark:bg-dark-color dark:bg-opacity-50
-                border border-white border-opacity-20 rounded-md 
-                focus:outline-none focus:ring-2 focus:ring-primary-color dark:focus:ring-secondary-color
-                text-dark-color dark:text-light-color transition-all"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Occupation</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Occupation" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            <div className="group">
-              <label
-                htmlFor="location"
-                className="block text-sm font-medium text-dark-color dark:text-light-color mb-1 group-hover:text-primary-color dark:group-hover:text-secondary-color transition-colors"
-              >
-                Location
-              </label>
-              <input
-                id="location"
+              <FormField
+                control={form.control}
                 name="location"
-                type="text"
-                value={formData.location}
-                onChange={handleChange}
-                className="w-full px-3 py-2 glass dark:bg-dark-color dark:bg-opacity-50
-                border border-white border-opacity-20 rounded-md 
-                focus:outline-none focus:ring-2 focus:ring-primary-color dark:focus:ring-secondary-color
-                text-dark-color dark:text-light-color transition-all"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Location</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Location" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            <div className="md:col-span-2 group">
-              <label
-                htmlFor="bio"
-                className="block text-sm font-medium text-dark-color dark:text-light-color mb-1 group-hover:text-primary-color dark:group-hover:text-secondary-color transition-colors"
-              >
-                Bio
-              </label>
-              <textarea
-                id="bio"
+              <FormField
+                control={form.control}
                 name="bio"
-                rows={4}
-                value={formData.bio}
-                onChange={handleChange}
-                className="w-full px-3 py-2 glass dark:bg-dark-color dark:bg-opacity-50
-                border border-white border-opacity-20 rounded-md 
-                focus:outline-none focus:ring-2 focus:ring-primary-color dark:focus:ring-secondary-color
-                text-dark-color dark:text-light-color transition-all"
+                render={({ field }) => (
+                  <FormItem className="md:col-span-2">
+                    <FormLabel>Bio</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Tell us a little about yourself" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
-          </div>
 
-          <div className="flex justify-end space-x-3 pt-4">
-            <button
-              type="button"
-              onClick={() => navigate("/admin/users")}
-              className="px-4 py-2 glass border border-white border-opacity-20 rounded-md
-              text-dark-color dark:text-light-color hover:bg-white hover:bg-opacity-10 transition-all"
-            >
-              Cancel
-            </button>
+            <div className="flex justify-end space-x-3 pt-4">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => navigate("/admin/users")}
+              >
+                Cancel
+              </Button>
 
-            <button
-              type="submit"
-              disabled={isSaving}
-              className="flex items-center px-4 py-2 bg-primary-color text-white rounded-md hover:bg-secondary-color
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-color
-              disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:-translate-y-1 hover:shadow-lg"
-            >
-              {isSaving ? (
-                <span className="flex items-center">
-                  <svg
-                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              <Button
+                type="submit"
+                disabled={isSaving}
+              >
+                {isSaving ? (
+                  <span className="flex items-center">
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
                   Saving...
                 </span>
-              ) : (
-                <span className="flex items-center">
-                  <Save className="mr-2 h-4 w-4" />
-                  Save Changes
-                </span>
-              )}
-            </button>
-          </div>
-        </form>
+                ) : (
+                  <span className="flex items-center">
+                    <Save className="mr-2 h-4 w-4" />
+                    Save Changes
+                  </span>
+                )}
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
     </div>
   )

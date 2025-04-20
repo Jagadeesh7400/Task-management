@@ -1,22 +1,25 @@
+/*
+*    Project: Authentication Styles
+*    Author:
+*/
+
 .auth-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  perspective: 1000px;
 }
 
+/* Auth card for better 3D effects */
 .auth-card {
   width: 100%;
   max-width: 400px;
-  background-color: var(--card-bg);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
+  border-radius: 12px;
   padding: 2rem;
   text-align: center;
-  backdrop-filter: blur(10px);
-  animation: fadeIn 0.5s ease-out;
+  perspective: 1000px;
+  border-radius: var(--border-radius);
 }
 
 .auth-logo {
@@ -26,7 +29,7 @@
 .auth-title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--dark-bg);
+  color: var(--0077b6);
   margin-bottom: 1.5rem;
 }
 
@@ -50,7 +53,7 @@
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: var(--dark-bg);
+  color: var(--0077b6);
   font-weight: 500;
 }
 
@@ -65,7 +68,7 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: var(--primary-blue);
+  border-color: var(--0077b6);
   box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.2);
 }
 
@@ -101,21 +104,21 @@
 }
 
 .forgot-link {
-  color: var(--primary-blue);
+  color: var(--0077b6);
   text-decoration: none;
   font-size: 0.875rem;
   transition: color var(--transition-speed) ease;
 }
 
 .forgot-link:hover {
-  color: var(--primary-dark-blue);
+  color: var(--023e8a);
   text-decoration: underline;
 }
 
 .auth-button {
   width: 100%;
   padding: 0.75rem 1rem;
-  background-color: var(--primary-blue);
+  background-color: var(--0077b6);
   color: white;
   border: none;
   border-radius: var(--card-border-radius);
@@ -130,7 +133,7 @@
 }
 
 .auth-button:hover {
-  background-color: var(--primary-dark-blue);
+  background-color: var(--023e8a);
 }
 
 .auth-button:disabled {
@@ -156,11 +159,11 @@
 .auth-footer {
   margin-top: 2rem;
   font-size: 0.875rem;
-  color: var(--dark-bg);
+  color: var(--0077b6);
 }
 
 .auth-footer a {
-  color: var(--primary-blue);
+  color: var(--0077b6);
   font-weight: 600;
   text-decoration: none;
 }
@@ -168,4 +171,3 @@
 .auth-footer a:hover {
   text-decoration: underline;
 }
-

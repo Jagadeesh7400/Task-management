@@ -5,7 +5,10 @@ import { Link, useNavigate } from "react-router-dom"
 import { Eye, EyeOff, UserPlus } from "lucide-react"
 import ZidioLogo from "@/components/ui/ZidioLogo"
 import { useAuth } from "@/hooks/useAuth"
-import "@/styles/auth.css"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function Register() {
   const [name, setName] = useState("")
@@ -17,7 +20,7 @@ export default function Register() {
   const [error, setError] = useState("")
 
   const navigate = useNavigate()
-  const { register, setAuthStatus } = useAuth()
+  const { register } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -31,12 +34,8 @@ export default function Register() {
     setIsLoading(true)
 
     try {
-      const registrationResult = await register(name, email, password)
-      if (registrationResult && registrationResult.message) {
-        navigate("/login")
-      } else {
-        setError("Registration failed. Please try again.")
-      }
+      await register(name, email, password)
+      navigate("/verify-email") // Redirect to a "check your email" page
     } catch (err) {
       setError(err.message || "Failed to register. Please try again.")
     } finally {
@@ -45,112 +44,96 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-caf0f8 to-0077b6 dark:from-023e8a dark:to-03045e p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-color to-secondary-color dark:from-dark-color dark:to-primary-color p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white dark:bg-03045e rounded-lg shadow-xl overflow-hidden">
-          <div className="p-6 sm:p-8">
-            <div className="flex justify-center mb-8">
-              <ZidioLogo className="h-12 w-12" />
-            </div>
+        <Card className="bg-white dark:bg-dark-color dark:bg-opacity-80 rounded-lg shadow-xl overflow-hidden">
+          <CardHeader className="flex flex-col items-center">
+            <ZidioLogo className="h-12 w-12 mb-4" />
+            <CardTitle className="text-2xl font-bold text-center text-primary-color dark:text-secondary-color">
+              Create an Account
+            </CardTitle>
+            <CardDescription className="text-center text-gray-600 dark:text-gray-300 mb-6">
+              Enter your details to create your account
+            </CardDescription>
+          </CardHeader>
 
-            <h2 className="text-2xl font-bold text-center text-0077b6 dark:text-48cae4 mb-6">Create an Account</h2>
-
+          <CardContent className="p-6 sm:p-8">
             {error && <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">{error}</div>}
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-0077b6 dark:text-48cae4 mb-1">
-                  Full Name
-                </label>
-                <input
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input
                   id="name"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  className="w-full px-3 py-2 border border-ade8f4 dark:border-023e8a rounded-md 
-                    focus:outline-none focus:ring-2 focus:ring-0077b6 dark:focus:ring-48cae4
-                    bg-white dark:bg-03045e text-0077b6 dark:text-white"
+                  className="w-full"
                   placeholder="John Doe"
                 />
               </div>
 
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-0077b6 dark:text-48cae4 mb-1">
-                  Email
-                </label>
-                <input
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-3 py-2 border border-ade8f4 dark:border-023e8a rounded-md 
-                    focus:outline-none focus:ring-2 focus:ring-0077b6 dark:focus:ring-48cae4
-                    bg-white dark:bg-03045e text-0077b6 dark:text-white"
+                  className="w-full"
                   placeholder="your@email.com"
                 />
               </div>
 
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-0077b6 dark:text-48cae4 mb-1">
-                  Password
-                </label>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
                 <div className="relative">
-                  <input
+                  <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="w-full px-3 py-2 border border-ade8f4 dark:border-023e8a rounded-md 
-                      focus:outline-none focus:ring-2 focus:ring-0077b6 dark:focus:ring-48cae4
-                      bg-white dark:bg-03045e text-0077b6 dark:text-white"
+                    className="w-full"
                     placeholder="••••••••"
                   />
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute inset-y-0 right-0 pr-3"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5 text-gray-400" />
                     ) : (
                       <Eye className="h-5 w-5 text-gray-400" />
                     )}
-                  </button>
+                  </Button>
                 </div>
               </div>
 
-              <div>
-                <label
-                  htmlFor="confirmPassword"
-                  className="block text-sm font-medium text-0077b6 dark:text-48cae4 mb-1"
-                >
-                  Confirm Password
-                </label>
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
                 <div className="relative">
-                  <input
+                  <Input
                     id="confirmPassword"
                     type={showPassword ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
-                    className="w-full px-3 py-2 border border-ade8f4 dark:border-023e8a rounded-md 
-                      focus:outline-none focus:ring-2 focus:ring-0077b6 dark:focus:ring-48cae4
-                      bg-white dark:bg-03045e text-0077b6 dark:text-white"
+                    className="w-full"
                     placeholder="••••••••"
                   />
                 </div>
               </div>
 
-              <button
+              <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md 
-                  shadow-sm text-sm font-medium text-white bg-0077b6 hover:bg-023e8a 
-                  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-0077b6
-                  disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+                className="w-full"
               >
                 {isLoading ? (
                   <span className="flex items-center">
@@ -172,8 +155,8 @@ export default function Register() {
                         className="opacity-75"
                         fill="currentColor"
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
+                        ></path>
+                      </svg>
                     Registering...
                   </span>
                 ) : (
@@ -182,20 +165,17 @@ export default function Register() {
                     Register
                   </span>
                 )}
-              </button>
+              </Button>
             </form>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                Already have an account?{" "}
-                <Link to="/login" className="text-0077b6 dark:text-48cae4 hover:underline">
-                  Login
-                </Link>
-              </p>
+            <div className="text-center mt-6">
+              Already have an account? <Link to="/login" className="text-primary-color dark:text-secondary-color hover:underline">Login</Link>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
 }
+
+export default Register

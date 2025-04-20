@@ -21,27 +21,14 @@ import TasksPage from "@/pages/TasksPage"
 import MeetingsPage from "@/pages/MeetingsPage"
 import TeamsPage from "@/pages/TeamsPage"
 import ManageTeamsPage from "@/pages/admin/ManageTeamsPage"
-
-import "@/styles/main.css"
-import "@/styles/index.css"
-import "@/styles/layout.css"
-import "@/styles/tasks.css"
-import "@/styles/admin.css"
-import "@/styles/auth.css"
-import "@/styles/profile.css"
-
+import { useTheme, ThemeProvider } from "@/hooks/useTheme"
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn") === "true")
-  const [userRole, setUserRole] = useState(localStorage.getItem("userRole"))
-  const [apiAvailable, setApiAvailable] = useState(true)
   const [isChecking, setIsChecking] = useState(true)
+  const [apiAvailable, setApiAvailable] = useState(true)
+  const { theme } = useTheme()
 
   useEffect(() => {
-    const storedIsLoggedIn = localStorage.getItem("isLoggedIn") === "true"
-    setIsLoggedIn(storedIsLoggedIn)
-    setUserRole(localStorage.getItem("userRole"))
-
     const checkApi = async () => {
       const isAvailable = await checkApiAvailability()
       setApiAvailable(isAvailable)
@@ -51,17 +38,6 @@ const App = () => {
     checkApi()
   }, [])
 
-  const setAuthStatus = (status, role) => {
-    setIsLoggedIn(status)
-    setUserRole(role)
-    localStorage.setItem("isLoggedIn", status.toString())
-    if (role) {
-      localStorage.setItem("userRole", role)
-    } else {
-      localStorage.removeItem("userRole")
-    }
-  }
-
   if (isChecking) {
     return <LoadingScreen />
   }
@@ -69,43 +45,37 @@ const App = () => {
   const demoMode = !apiAvailable
 
   return (
-    <AuthProvider setAuthStatus={setAuthStatus}>
-      <Router>
-        {demoMode && (
-          <div className="demo-mode-banner">Backend API not available. Running in demo mode with mock data.</div>
-        )}
-        <Routes>
-          {/* Public routes */}
-          <Route path="/login" element={!isLoggedIn ? <Login demoMode={demoMode} /> : <Navigate to="/dashboard" />} />
-          <Route
-            path="/register"
-            element={!isLoggedIn ? <Register demoMode={demoMode} /> : <Navigate to="/dashboard" />}
-          />
-          <Route
-            path="/forgot-password"
-            element={!isLoggedIn ? <ForgotPassword demoMode={demoMode} /> : <Navigate to="/dashboard" />}
-          />
-          <Route path="/verify-email/:token" element={<VerifyEmail demoMode={demoMode} />} />
-          <Route path="/unauthorized" element={<Unauthorized />} />
+    <ThemeProvider>
+      <div className={`${theme === "dark" ? "dark" : ""}`}>
+        <Router>
+          {demoMode && (
+            <div className="demo-mode-banner">Backend API not available. Running in demo mode with mock data.</div>
+          )}
+          <Routes>
+            {/* Public routes */}
+            <Route path="/login" element={<Login demoMode={demoMode} />} />
+            <Route path="/register" element={<Register demoMode={demoMode} />} />
+            <Route path="/forgot-password" element={<ForgotPassword demoMode={demoMode} />} />
+            <Route path="/verify-email/:token" element={<VerifyEmail demoMode={demoMode} />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
 
-          {/* Protected routes */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <MainLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<Navigate to="/dashboard" />} />
-            <Route path="dashboard" element={<TaskBoard />} />
-            <Route path="tasks" element={<TasksPage />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="meetings" element={<MeetingsPage />} />
-            <Route path="teams" element={<TeamsPage />} />
+            {/* Protected routes */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <MainLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Navigate to="/dashboard" />} />
+              <Route path="dashboard" element={<TaskBoard />} />
+              <Route path="tasks" element={<TasksPage />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="meetings" element={<MeetingsPage />} />
+              <Route path="teams" element={<TeamsPage />} />
 
-            {/* Admin routes */}
-            {userRole === "admin" ? (
+              {/* Admin routes */}
               <Route path="admin">
                 <Route index element={<AdminDashboard />} />
                 <Route path="dashboard" element={<AdminDashboard />} />
@@ -133,7 +103,7 @@ const App = () => {
                     </ProtectedRoute>
                   }
                 />
-                                <Route
+                <Route
                   path="teams"
                   element={
                     <ProtectedRoute requireAdmin={true}>
@@ -142,16 +112,14 @@ const App = () => {
                   }
                 />
               </Route>
-            ) : (
-              <Route path="admin/*" element={<Navigate to="/unauthorized" />} />
-            )}
-          </Route>
+            </Route>
 
-          {/* Fallback route */}
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </Router>
-    </AuthProvider>
+            {/* Fallback route */}
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Router>
+      </div>
+    </ThemeProvider>
   )
 }
 
