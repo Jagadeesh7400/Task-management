@@ -1,4 +1,12 @@
-# Zidio Task Management System
+# Zidio Task Management System Project - 1 and 2
+## Team 4
+Ajish Y
+Bikash Mahato
+Sandeep Ahirwar
+SUDHARSANAM D
+Rohit Basavaraj Teli
+Jagadeesh K
+Aryan Rajbhar
 
 ## 📌 Overview
 Zidio is a **modern task management system** designed to streamline workflows, enhance team productivity, and provide a seamless user experience. It includes **role-based access control (RBAC), advanced analytics, notifications, and a responsive UI**, making it ideal for businesses and individuals.
